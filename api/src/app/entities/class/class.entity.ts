@@ -13,6 +13,7 @@ import {
 } from 'typeorm';
 import { Grade } from '../grade/grade.entity';
 import { Level } from '../level/level.entity';
+import { Location } from '../location/location.entity';
 import { User } from '../user/user.entity';
 
 @Entity()
@@ -40,7 +41,7 @@ export class Class {
   location: Location;
 
   @ManyToOne(() => Level, {
-    onDelete: 'RESTRICT',
+    onDelete: 'CASCADE',
     //cascade: ['insert', 'update', 'remove'],
   })
   level: Level;
@@ -51,30 +52,8 @@ export class Class {
   })
   user: User;
 
-  @OneToMany(() => Grade, (grade) => grade.classes, {
+  @OneToMany(() => Grade, (grade) => grade.class, {
     //cascade: ['insert', 'update'],
   })
   grades: Grade[];
-  /*@Column({
-    type: 'enum',
-    enum: ReleaseType,
-  })
-  type: ReleaseType;
-
-  @ManyToMany(() => Artist, (artist) => artist.releases, {
-    onDelete: 'CASCADE',
-    cascade: true,
-  })
-  artists: Artist[];
-
-  @OneToMany(() => Track, (track) => track.release, {
-    cascade: ['insert', 'update'],
-  })
-  tracks: Track[];
-
-  @ManyToMany(() => Genre, (genre) => genre.releases, {
-    cascade: ['insert', 'update'],
-  })
-  @JoinTable()
-  genres: Genre[];*/
 }

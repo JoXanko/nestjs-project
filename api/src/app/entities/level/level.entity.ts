@@ -20,8 +20,8 @@ export class Level {
   @OneToMany(() => Class, (c) => c.level)
   classes: Class[];
 
-  @ManyToMany(() => Category, (Category) => Category.levels, {
+  @OneToMany(() => Category, (Category) => Category.level, /*{
     cascade: true,
-  })
+  }*/)
   categories: Category[];
 }

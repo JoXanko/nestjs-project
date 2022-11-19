@@ -1,4 +1,11 @@
 /* eslint-disable prettier/prettier */
+import { Category } from 'src/app/entities/caregory/category.entity';
+import { Chat } from 'src/app/entities/chat/chat.entity';
+import { Class } from 'src/app/entities/class/class.entity';
+import { Grade } from 'src/app/entities/grade/grade.entity';
+import { Level } from 'src/app/entities/level/level.entity';
+import { Location } from 'src/app/entities/location/location.entity';
+import { User } from 'src/app/entities/user/user.entity';
 import { DataSourceOptions } from 'typeorm';
 
 export const typeOrmConfig: DataSourceOptions = {
@@ -8,28 +15,6 @@ export const typeOrmConfig: DataSourceOptions = {
   username: 'postgres',
   password: 'mysecretpassword',
   database: 'itutor',
-  entities: [],
+  entities: [Category,Chat,Class,Grade,Level,Location,User],
   synchronize: true,
 };
-
-/*import { DataSource } from 'typeorm';
-
-export const typeOrmConfig = [
-  {
-    provide: 'DATA_SOURCE',
-    useFactory: async () => {
-      const dataSource = new DataSource({
-        type: 'postgres',
-        host: 'localhost',
-        port: 5432,
-        username: 'postgres',
-        password: 'mysecretpassword',
-        database: 'ITutor',
-        entities: [],
-        synchronize: true,
-      });
-
-      return dataSource.initialize();
-    },
-  },
-];*/

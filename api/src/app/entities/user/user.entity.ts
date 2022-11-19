@@ -5,9 +5,13 @@ import {
   Index,
   JoinTable,
   ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
+import { Chat } from '../chat/chat.entity';
+import { Class } from '../class/class.entity';
+import { Grade } from '../grade/grade.entity';
 import { Type } from './type';
 
 @Entity()
@@ -27,8 +31,14 @@ export class User {
   @Column()
   name: string;
 
+  @Column()
+  surname: string;
+
   @Column({ default: '' })
   imageUrl: string;
+
+  @Column({ default: '' })
+  bio: string;
 
   @Column({
     type: 'enum',
@@ -37,22 +47,20 @@ export class User {
   })
   role: Type;
 
+  @OneToMany(() => Class, (c) => c.user)
+  classes: Class[];
+
+  @OneToMany(() => Grade, (c) => c.grade)
+  grades: Grade[];
+
   /*@ManyToMany(() => Playlist, (playlist) => playlist.owners)
   @JoinTable()
-  playlists: Playlist[];
+  playlists: Playlist[];*/ //da li treba ovako?????
+  @OneToMany(() => Chat, (chat) => chat.student)
+  //@JoinTable()
+  chatsStudent: Chat[];
 
-  @ManyToMany(() => Playlist, (playlist) => playlist.likedByUsers)
-  @JoinTable()
-  likedPlaylists: Playlist[];
-
-  @ManyToMany(() => Track, (track) => track.likedByUsers)
-  @JoinTable()
-  likedTracks: Track[];
-
-  @ManyToMany(() => User, (user) => user.following)
-  @JoinTable()
-  followers: User[];
-
-  @ManyToMany(() => User, (user) => user.followers)
-  following: User[];*/
+  @OneToMany(() => Chat, (chat) => chat.tutor)
+  //@JoinTable()
+  chatsTutor: Chat[];
 }

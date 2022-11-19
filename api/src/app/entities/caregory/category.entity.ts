@@ -3,8 +3,7 @@ import {
   Column,
   Entity,
   PrimaryGeneratedColumn,
-  OneToMany,
-  ManyToMany,
+  ManyToOne,
 } from 'typeorm';
 import { Level } from '../level/level.entity';
 
@@ -16,8 +15,8 @@ export class Category {
   @Column()
   name: string;
 
-  @ManyToMany(() => Level, (Level) => Level.categories, {
+  @ManyToOne(() => Level, (Level) => Level.categories, {
     cascade: true,
   })
-  levels: Level[];
+  level: Level;
 }

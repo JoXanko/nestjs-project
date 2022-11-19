@@ -9,7 +9,9 @@ import {
   Post,
 } from '@nestjs/common';
 import { ClassDto } from 'src/app/entities/class/dto/class.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Class')
 @Controller('class')
 export class ClassController {
   constructor(private classService: ClassService) {}

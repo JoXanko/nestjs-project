@@ -10,7 +10,9 @@ import {
 } from '@nestjs/common';
 import { GradeDto } from 'src/app/entities/grade/dto/grade.dto';
 import { CategoryDto } from 'src/app/entities/caregory/dto/category.dto';
+import {ApiTags} from '@nestjs/swagger'
 
+@ApiTags('Category')
 @Controller('category')
 export class CategoryController {
   constructor(private categoryService: CategoryService) {}

@@ -27,11 +27,11 @@ export class Grade {
     onDelete: 'CASCADE',
     cascade: ['insert', 'update', 'remove'],
   })
-  users: User;
+  student: User;
 
   @ManyToOne(() => Class, {
     onDelete: 'CASCADE',
     cascade: ['insert', 'update', 'remove'],
   })
-  classes: Class;
+  class: Class;
 }

@@ -1,5 +1,6 @@
 import { Grade } from '../../grade/grade.entity';
 import { Level } from '../../level/level.entity';
+import { Location } from '../../location/location.entity';
 import { User } from '../../user/user.entity';
 
 export class ClassDto {

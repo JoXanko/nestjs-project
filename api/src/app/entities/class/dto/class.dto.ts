@@ -8,8 +8,8 @@ export class ClassDto {
   new: boolean;
   bio: string;
   photo: string;
-  location: Location;
-  levelId: number;
+  locationId: number;
+  categoryId: number;
   userId: number;
   grades: Grade[];
 }

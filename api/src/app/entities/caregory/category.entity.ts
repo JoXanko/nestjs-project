@@ -4,7 +4,10 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   ManyToOne,
+  JoinColumn,
+  OneToMany,
 } from 'typeorm';
+import { Class } from '../class/class.entity';
 import { Level } from '../level/level.entity';
 
 @Entity()
@@ -19,4 +22,8 @@ export class Category {
     onDelete: 'CASCADE',
   })
   level: Level;
+
+  @OneToMany(() => Class, (c) => c.category)
+  @JoinColumn()
+  classes: Class[];
 }

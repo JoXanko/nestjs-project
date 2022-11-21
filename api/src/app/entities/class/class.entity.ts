@@ -12,6 +12,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Category } from '../caregory/category.entity';
 import { Grade } from '../grade/grade.entity';
 import { Level } from '../level/level.entity';
 import { Location } from '../location/location.entity';
@@ -26,11 +27,14 @@ export class Class {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ default: false })
   new: boolean;
 
   @Column()
   bio: string;
+
+  @Column({ default: 0 })
+  avgGrade: number;
 
   @Column({ default: '' })
   photo: string;
@@ -41,11 +45,11 @@ export class Class {
   })
   location: Location;
 
-  @ManyToOne(() => Level, {
+  @ManyToOne(() => Category, {
     onDelete: 'CASCADE',
     //cascade: ['insert', 'update', 'remove'],
   })
-  level: Level;
+  category: Category;
 
   @ManyToOne(() => User, {
     //onDelete: 'CASCADE',

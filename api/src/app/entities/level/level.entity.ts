@@ -17,9 +17,9 @@ export class Level {
   @Column()
   name: string;
 
-  @OneToMany(() => Class, (c) => c.level)
+  /*@OneToMany(() => Class, (c) => c.level)
   @JoinColumn()
-  classes: Class[];
+  classes: Class[];*/
 
   @OneToMany(() => Category, (Category) => Category.level, /*{
     cascade: true,

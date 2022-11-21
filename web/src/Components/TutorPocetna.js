@@ -167,7 +167,7 @@ const TutorPocetna = () => {
   };
 
   const ucitajUsluge = async () => {
-    const us = [];
+    /*const us = [];
     const usID = [];
     const q = query(uslugeRef, where("tutor", "==", auth.currentUser.uid));
     const snapshot = await getDocs(q);
@@ -175,8 +175,21 @@ const TutorPocetna = () => {
     snapshot.forEach((doc) => {
       us.push(doc.data());
       usID.push(doc.id);
+    });*/
+    fetch(`http://localhost:3000/class/classes/` + 1, {
+      //OVDE TREBA ID USER-A
+      method: "GET",
+      withCredentials: true,
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((actualData) => setUsluge(actualData));
+    const usID = [];
+    usluge.forEach((usluga) => {
+      console.log(usluga);
+      usID.push(usluga.id);
     });
-    setUsluge(us);
     setUslugeID(usID);
   };
   useEffect(() => {
@@ -224,17 +237,26 @@ const TutorPocetna = () => {
         naslov !== "" &&
         opis !== ""
       ) {
-        await addDoc(uslugeRef, {
-          kategorija: oblast,
-          lokacija: grad,
-          nazivUsluge: naslov,
-          opis: opis,
-          stepen: nivo,
-          tutor: auth.currentUser.uid,
-          fotografija: slika,
-          srednjaOcena: 0,
-          brojOcena: 0,
+        let podaci = {
+          name: naslov,
+          bio: opis,
+          photo: "slika",
+          new: true,
+          locationId: grad,
+          categoryId: oblast,
+          userId: 1, //izmeni
+        };
+        await fetch(`http://localhost:3000/class/addClass`, {
+          withCredentials: true,
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(podaci),
+        }).then((response) => {
+          return response.json();
         });
+
         ucitajUsluge();
         setPoruka("Usluga je uspešno dodata!");
         setOpen(true);
@@ -265,31 +287,79 @@ const TutorPocetna = () => {
     }
   };
 
-  async function izmeniUslugu(index) {
+  async function izmeniUslugu(idUsluge) {
     await ucitajUsluge();
     setPadajuci(true);
+    fetch(`http://localhost:3000/class/singleClass/` + idUsluge, {
+      //OVDE TREBA ID USER-A
+      method: "GET",
+      withCredentials: true,
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((actualData) => {
+        setOpen4(!open4);
+        fetch(`http://localhost:3000/level/` + actualData.category.id)
+          .then((response) => {
+            return response.json();
+          })
+          .then((data) => setNivo(data.id.toString())); //setNivo(data.id) OVO IZMENI DA BUDE BROJ OD 1 2 3 KAD PROCITA IZ BAZE
+        setOblast(actualData.category.name);
+        setGrad(actualData.location.name);
+        setNaslov(actualData.name);
+        setOpis(actualData.bio);
+        setIDzamene(actualData.id);
+        setSlika(actualData.photo);
+      });
+
     /*if (show === false) {
             setShow(!show);
         }*/
-    setOpen4(!open4);
-    setNivo(usluge.at(index).stepen);//OVO IZMENI DA BUDE BROJ OD 1 2 3 KAD PROCITA IZ BAZE
+
+    /*setOpen4(!open4);
+    setNivo(usluge.at(index).stepen); //OVO IZMENI DA BUDE BROJ OD 1 2 3 KAD PROCITA IZ BAZE
     setOblast(usluge.at(index).kategorija);
     setGrad(usluge.at(index).lokacija);
     setNaslov(usluge.at(index).nazivUsluge);
     setOpis(usluge.at(index).opis);
     setIDzamene(uslugeID.at(index));
-    setSlika(usluge.at(index).fotografija);
+    setSlika(usluge.at(index).fotografija);*/
   }
 
   async function izbrisiUslugu(id) {
-    await deleteDoc(doc(db, "usluge", id));
+    await fetch("http://localhost:3000/class/deleteClass/" + id, {
+      method: "DELETE",
+    });
+    //await deleteDoc(doc(db, "usluge", id));
     setOpen2(true);
     ucitajUsluge();
   }
 
+  async function prikaziSrednjuOcenu(id) {
+    //let average = 0;
+    if (id != "") {
+      fetch(`http://localhost:3000/grade/averageGrade/` + id)
+        .then((response) => {
+          return response.json();
+        })
+        .then((actualData) => {
+          //console.log(Number(actualData));
+          return Number(actualData);
+        });
+    }
+  }
+
   async function prijaviOcenu(id) {
-    let temp = doc(db, "ocene", id);
-    updateDoc(temp, { oznacena: true });
+    if (id != undefined) {
+      fetch("http://localhost:3000/grade/updateFlagged/" + id, {
+        //OVDE TREBA ID USER-A
+        method: "PUT",
+        withCredentials: true,
+      }).then((response) => {
+        return response.json();
+      });
+    }
     setOpen5(true);
     console.log(id);
   }
@@ -321,21 +391,37 @@ const TutorPocetna = () => {
   };
 
   async function promeniOcenu(id) {
-    const zamenaDoc = doc(db, "ocene", id);
-    await updateDoc(zamenaDoc, { nova: false });
+    if (id != undefined) {
+      fetch(`http://localhost:3000/grade/updateNew` + "/" + id, {
+        //OVDE TREBA ID USER-A
+        method: "PUT",
+        withCredentials: true,
+      }).then((response) => {
+        return response.json();
+      });
+    }
   }
 
   async function prikaziOcene(id) {
     ucitajUsluge();
-    const zamenaDoc = doc(db, "usluge", id);
+    if (id != undefined) {
+      fetch(`http://localhost:3000/grade` + "/" + id)
+        .then((response) => {
+          return response.json();
+        })
+        .then((actualData) => setOcene(actualData));
+    }
+    setOpen3(true);
+    /*const zamenaDoc = doc(db, "usluge", id);
     await updateDoc(zamenaDoc, { nova: false });
     setOpen3(true);
     setOcene([]);
     const q = query(oceneRef, where("uslugaID", "==", id));
-    const snapshot = await getDocs(q);
-    snapshot.docs.forEach((e) =>
+    const snapshot = await getDocs(q);*/
+
+    /*snapshot.docs.forEach((e) =>
       setOcene((ocene) => [...ocene, { ...e.data(), idOcene: e.id }])
-    );
+    );*/
 
     /*let temp = ocene;
         temp.sort((a, b) => b.datum - a.datum);
@@ -529,9 +615,9 @@ const TutorPocetna = () => {
                           marginBottom: "1rem",
                         }}
                       >
-                        {usluga.fotografija ? (
+                        {usluga.photo ? (
                           <img
-                            src={usluga.fotografija}
+                            src={usluga.photo}
                             style={{
                               maxHeight: "150px",
                               maxWidth: "300px",
@@ -561,7 +647,7 @@ const TutorPocetna = () => {
                           variant="h5"
                           style={{ marginRight: "2rem" }}
                         >
-                          Naslov: {usluga.nazivUsluge}
+                          Naslov: {usluga.name}
                         </Typography>
                         <Tooltip
                           title="Prikaži sve ocene za datu uslugu"
@@ -574,16 +660,16 @@ const TutorPocetna = () => {
                             component="h3"
                             fontWeight="500"
                             variant="h6"
-                            onClick={() => prikaziOcene(uslugeID.at(index))}
+                            onClick={() => prikaziOcene(usluga.id)}
                           >
                             Srednja ocena:
                             <Rating
                               name="read-only"
                               precision={0.1}
-                              value={usluga.srednjaOcena}
+                              value={usluga.avgGrade} //pozovi srednje ocene ovde
                               readOnly
                             />
-                            {usluga.nova ? (
+                            {usluga.new ? (
                               <Typography
                                 style={{ fontSize: 16, color: "#b3b068" }}
                                 fontWeight="500"
@@ -603,7 +689,7 @@ const TutorPocetna = () => {
                       borderBottom={"solid gray 1px"}
                       style={{ paddingTop: "1rem", paddingBottom: "1rem" }}
                     >
-                      {usluga.opis}
+                      {usluga.bio}
                     </Typography>
                     <Box
                       display="flex"
@@ -623,14 +709,14 @@ const TutorPocetna = () => {
                           variant="h6"
                           style={{ paddingTop: "1rem" }}
                         >
-                          ○ Lokacija: {usluga.lokacija}
+                          ○ Lokacija: {usluga.location.name}
                         </Typography>
                         <Typography
                           component="h3"
                           fontWeight="500"
                           variant="h6"
                         >
-                          ○ Stepen: {usluga.stepen}
+                          ○ Stepen: {"1" /*ovo resi*/}
                         </Typography>
                         <Typography
                           component="h3"
@@ -638,13 +724,14 @@ const TutorPocetna = () => {
                           variant="h6"
                           style={{ paddingBottom: "1rem" }}
                         >
-                          ○ Oblast: {usluga.kategorija}
+                          ○ Oblast:{" "}
+                          {usluga.category.name /*treba ispise kagetoriju*/}
                         </Typography>
                       </Box>
                       <Box>
                         <ColorButton
                           onClick={() => {
-                            izmeniUslugu(index);
+                            izmeniUslugu(usluga.id);
                           }}
                           variant="contained"
                           startIcon={<BorderColorIcon />}
@@ -653,7 +740,7 @@ const TutorPocetna = () => {
                           Izmeni
                         </ColorButton>
                         <ColorButton
-                          onClick={() => izbrisiUslugu(uslugeID.at(index))}
+                          onClick={() => izbrisiUslugu(usluga.id)}
                           startIcon={<DeleteIcon />}
                           variant="contained"
                           sx={{ mr: 2 }}
@@ -681,7 +768,7 @@ const TutorPocetna = () => {
                       <>
                         {ocene.map((ocena, index) => {
                           {
-                            promeniOcenu(ocena.idOcene);
+                            promeniOcenu(ocena.id);
                           }
                           return (
                             <Grid
@@ -692,7 +779,7 @@ const TutorPocetna = () => {
                               elevation={10}
                               margin={"1rem"}
                               style={
-                                ocena.nova
+                                ocena.new
                                   ? { border: "double 5px #f2efa7" }
                                   : {}
                               }
@@ -705,7 +792,7 @@ const TutorPocetna = () => {
                                     float: "right",
                                   }}
                                 >
-                                  {ocena.nova ? (
+                                  {ocena.new ? (
                                     <AutoAwesomeOutlinedIcon
                                       style={{ fontSize: 35, color: "#b3b068" }}
                                     />
@@ -723,7 +810,7 @@ const TutorPocetna = () => {
                                       Datum:{" "}
                                     </Box>
                                     {new Date(
-                                      ocena.datum.seconds * 1000
+                                      ocena.date * 1000
                                     ).toLocaleDateString("de-DE", {
                                       year: "numeric",
                                       month: "2-digit",
@@ -754,14 +841,14 @@ const TutorPocetna = () => {
                                     <Rating
                                       name="read-only"
                                       precision={0.1}
-                                      value={ocena.ocena}
+                                      value={ocena.grade}
                                       readOnly
                                     />
                                   </Box>
                                   <ColorButton
                                     startIcon={<ReportGmailerrorredIcon />}
                                     variant="contained"
-                                    onClick={() => prijaviOcenu(ocena.idOcene)}
+                                    onClick={() => prijaviOcenu(ocena.id)}
                                   >
                                     Prijavi
                                   </ColorButton>
@@ -771,7 +858,7 @@ const TutorPocetna = () => {
                                   <Box fontWeight="800" display="inline">
                                     Komentar:{" "}
                                   </Box>
-                                  {ocena.komentar}
+                                  {ocena.comment}
                                 </Typography>
 
                                 <Typography gutterBottom></Typography>

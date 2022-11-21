@@ -27,6 +27,11 @@ export class GradeController {
     return this.gradeService.getById(id);
   }
 
+  @Get('averageGrade/:id')
+  public getAverage(@Param('id', ParseIntPipe) id: number) {
+    return this.gradeService.getAverageGrade(id);
+  }
+
   @Post()
   public addLocation(@Body() dto: GradeDto) {
     return this.gradeService.create(dto);

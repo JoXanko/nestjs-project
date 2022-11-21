@@ -14,9 +14,15 @@ export class LevelService {
     return this.levelRepository.find();
   }
 
-  public getById(id: number) {
+  public getLvlByCategoryID(id: number) {
+    //vrati lvl za catID
     return this.levelRepository.findOne({
-      where: { id }, //??ovako treba?
+      relations: { categories: true },
+      where: {
+        categories: {
+          id: id,
+        },
+      }, //??ovako treba?
     });
   }
 

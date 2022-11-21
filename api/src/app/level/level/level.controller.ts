@@ -21,7 +21,7 @@ export class LevelController {
 
   @Get(':id')
   public getLevel(@Param('id', ParseIntPipe) id: number) {
-    return this.levelService.getById(id);
+    return this.levelService.getLvlByCategoryID(id);
   }
 
   @Post()

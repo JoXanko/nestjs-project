@@ -8,6 +8,7 @@ import {
   OneToMany,
   Index,
   JoinTable,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -55,5 +56,6 @@ export class Class {
   @OneToMany(() => Grade, (grade) => grade.class, {
     //cascade: ['insert', 'update'],
   })
+  @JoinColumn()
   grades: Grade[];
 }

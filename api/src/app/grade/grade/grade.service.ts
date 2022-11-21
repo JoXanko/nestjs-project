@@ -11,17 +11,24 @@ export class GradeService {
     @InjectRepository(Grade) private gradeRepository: Repository<Grade>,
   ) {}
 
-  public getAll() {
+  /*public getAll() {
     return this.gradeRepository.find();
-  }
+  }*/
 
-  public getById(id: number) {
-    return this.gradeRepository.findOne({
-      where: { id }, //??ovako treba?
+  public getById(classId: number) {
+    //za tutora pregled ocena
+    return this.gradeRepository.find({
+      relations: { class: true },
+      where: {
+        class: {
+          id: classId,
+        },
+      },
     });
   }
 
   public async create(gradeDto: GradeDto) {
+    console.log(gradeDto)
     const grade = this.gradeRepository.create(gradeDto);
     return await this.gradeRepository.save(grade);
   }
@@ -30,7 +37,27 @@ export class GradeService {
     return await this.gradeRepository.delete(id);
   }
 
-  public async update(id: number, dto: GradeDto) {
-    return await this.gradeRepository.update(id, dto);
+  public async updateFlagged(GradeId: number) {
+    const gradeToUpdate = await this.gradeRepository.findOneBy({
+      id: GradeId,
+    });
+    gradeToUpdate.flagged = !gradeToUpdate.flagged;
+    return await this.gradeRepository.save(gradeToUpdate);
+  }
+
+  public async updateNew(classId: number) {
+    //svaki grade za dati class new na false
+    const gradeToUpdate = await this.gradeRepository.find({
+      relations: { class: true },
+      where: {
+        class: {
+          id: classId,
+        },
+      },
+    });
+    gradeToUpdate.forEach((grade) => {
+      grade.new = false;
+    });
+    return await this.gradeRepository.save(gradeToUpdate);
   }
 }

@@ -4,9 +4,9 @@ import { User } from '../../user/user.entity';
 export class GradeDto {
   date: string;
   comment: string;
-  new: boolean;
+  //new: boolean;
   grade: number;
-  flagged: boolean;
-  student: User;
-  class: Class;
+  //flagged: boolean;
+  studentId: number;
+  classId: number;
 }

@@ -3,6 +3,7 @@ import {
   Column,
   Entity,
   Index,
+  JoinColumn,
   JoinTable,
   ManyToMany,
   OneToMany,
@@ -48,9 +49,11 @@ export class User {
   role: Type;
 
   @OneToMany(() => Class, (c) => c.user)
+  @JoinColumn()
   classes: Class[];
 
   @OneToMany(() => Grade, (c) => c.grade)
+  @JoinColumn()
   grades: Grade[];
 
   /*@ManyToMany(() => Playlist, (playlist) => playlist.owners)
@@ -58,9 +61,11 @@ export class User {
   playlists: Playlist[];*/ //da li treba ovako?????
   @OneToMany(() => Chat, (chat) => chat.student)
   //@JoinTable()
+  @JoinColumn()
   chatsStudent: Chat[];
 
   @OneToMany(() => Chat, (chat) => chat.tutor)
   //@JoinTable()
+  @JoinColumn()
   chatsTutor: Chat[];
 }

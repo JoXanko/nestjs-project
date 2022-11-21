@@ -4,7 +4,7 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   OneToMany,
-  ManyToMany,
+  JoinColumn,
 } from 'typeorm';
 import { Category } from '../../entities/caregory/category.entity';
 import { Class } from '../../entities/class/class.entity';
@@ -18,10 +18,12 @@ export class Level {
   name: string;
 
   @OneToMany(() => Class, (c) => c.level)
+  @JoinColumn()
   classes: Class[];
 
   @OneToMany(() => Category, (Category) => Category.level, /*{
     cascade: true,
   }*/)
+  @JoinColumn()
   categories: Category[];
 }

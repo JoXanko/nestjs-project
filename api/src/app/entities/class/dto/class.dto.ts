@@ -9,7 +9,7 @@ export class ClassDto {
   bio: string;
   photo: string;
   location: Location;
-  level: Level;
-  user: User;
+  levelId: number;
+  userId: number;
   grades: Grade[];
 }

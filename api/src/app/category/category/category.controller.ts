@@ -16,15 +16,15 @@ import {ApiTags} from '@nestjs/swagger'
 @Controller('category')
 export class CategoryController {
   constructor(private categoryService: CategoryService) {}
-  @Get()
-  public getCategories() {
-    return this.categoryService.getAll();
+  @Get(':id')
+  public getCategories(@Param('id', ParseIntPipe) id: number) {
+    return this.categoryService.getAll(id);
   }
 
-  @Get(':id')
+  /*@Get(':id')
   public getCategory(@Param('id', ParseIntPipe) id: number) {
     return this.categoryService.getById(id);
-  }
+  }*/
 
   @Post()
   public addCategory(@Body() dto: CategoryDto) {

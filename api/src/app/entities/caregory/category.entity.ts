@@ -15,8 +15,8 @@ export class Category {
   @Column()
   name: string;
 
-  @ManyToOne(() => Level, (Level) => Level.categories, {
-    cascade: true,
+  @ManyToOne(() => Level, {
+    onDelete: 'CASCADE',
   })
   level: Level;
 }

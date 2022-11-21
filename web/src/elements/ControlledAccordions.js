@@ -84,15 +84,15 @@ export const ControlledAccordions = (props) => {
                         >
                             <Box display={'flex'} flexDirection={'row'} flexWrap={'wrap'}>
                                 <Box height='150px' minWidth='300px' display={'flex'} justifyContent={'center'} style={{ backgroundColor: 'lightGray', marginRight: '2rem' }}>
-                                    {usluga.fotografija ? <img src={usluga.fotografija} height='150px' /> : <img src={undf} height='150px' />}
+                                    {usluga.photo ? <img src={usluga.photo} height='150px' /> : <img src={undf} height='150px' />}
                                 </Box>
                                 <Box display={'flex'} flexDirection={'column'} justifyContent={'space-evenly'}>
                                     <Typography sx={{ flexShrink: 0 }} component="h3" fontWeight='500' variant="h6" style={{ marginRight: '2rem' }} >
-                                        Naslov: {usluga.nazivUsluge}
+                                        Naslov: {usluga.name}
                                     </Typography>
                                     <Typography style={{ display: 'flex', alignItems: 'center' }} color='primary' component="h1" fontWeight='500' variant="h6" >
                                         Ocena:
-                                        <Rating name="read-only" precision={0.1} value={usluga.srednjaOcena} readOnly sx={{marginLeft:"0.5rem", marginRight:"1rem"}}/>
+                                        <Rating name="read-only" precision={0.1} value={usluga.avgGrade} readOnly sx={{marginLeft:"0.5rem", marginRight:"1rem"}}/>
                                         Od {usluga.brojOcena} ocena
                                     </Typography>
                                 </Box>
@@ -101,12 +101,12 @@ export const ControlledAccordions = (props) => {
                         </AccordionSummary>
                         <AccordionDetails>
                             <Typography varian="h6" marginBottom="2rem" borderBottom="1px solid gray">
-                                {usluga.opis}
+                                {usluga.bio}
                             </Typography>
                             <Typography varian="h6" fontWeight="600">Tutor ove usluge je:</Typography>
-                            <ProfileBadge tutor={usluga.tutor} />
+                            <ProfileBadge tutor={usluga.user} />
 
-                            <Rating name="read-only" precision={0.5} value={usluga.srednjaOcena} readOnly sx={{ ml: 2 }} />
+                            <Rating name="read-only" precision={0.5} value={usluga.avgGrade} readOnly sx={{ ml: 2 }} />
                         </AccordionDetails>
                     </Accordion>
                     

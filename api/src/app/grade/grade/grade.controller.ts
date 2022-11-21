@@ -41,6 +41,7 @@ export class GradeController {
   public updateFlagged(@Param('id', ParseIntPipe) id: number) {
     return this.gradeService.updateFlagged(id);
   }
+
   @Put('updateNew/:id')
   public updateNew(@Param('id', ParseIntPipe) id: number) {
     return this.gradeService.updateNew(id);

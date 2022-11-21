@@ -36,6 +36,8 @@ const firebaseConfig = {
 
 };
 
+export const api="http://localhost:3000/";
+
 export const app = initializeApp(firebaseConfig);
 
 const App = () =>{

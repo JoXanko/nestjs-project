@@ -24,6 +24,8 @@ import Stack from "@mui/material/Stack";
 import PushPinOutlinedIcon from "@mui/icons-material/PushPinOutlined";
 import AutoAwesomeOutlinedIcon from "@mui/icons-material/AutoAwesomeOutlined";
 
+import { api } from "../App";
+
 //--firebase imports--
 import { getAuth, signOut, updateProfile } from "firebase/auth";
 import {
@@ -93,8 +95,8 @@ const TutorPocetna = () => {
   const [ocene, setOcene] = useState([]);
   const [poruka, setPoruka] = useState("");
   const [slika, setSlika] = useState("");
-  const [oblast, setOblast] = useState("");
-  const [grad, setGrad] = useState("");
+  const [oblast, setOblast] = useState({});
+  const [grad, setGrad] = useState({});
   const [nivo, setNivo] = useState("");
   const [IDzamene, setIDzamene] = useState("");
 
@@ -176,7 +178,7 @@ const TutorPocetna = () => {
       us.push(doc.data());
       usID.push(doc.id);
     });*/
-    fetch(`http://localhost:3000/class/classes/` + 1, {
+    fetch(api + `class/classes/` + 1, {
       //OVDE TREBA ID USER-A
       method: "GET",
       withCredentials: true,
@@ -194,7 +196,7 @@ const TutorPocetna = () => {
   };
   useEffect(() => {
     const getGradovi = async () => {
-      fetch(`http://localhost:3000/location`, {
+      fetch(api + `location`, {
         method: "GET",
         withCredentials: true,
       })
@@ -204,7 +206,7 @@ const TutorPocetna = () => {
         .then((actualData) => setNiz2(actualData));
 
       if (nivo != "") {
-        fetch(`http://localhost:3000/category` + "/" + nivo)
+        fetch(api + `category/` + nivo)
           .then((response) => {
             return response.json();
           })
@@ -241,12 +243,12 @@ const TutorPocetna = () => {
           name: naslov,
           bio: opis,
           photo: "slika",
-          new: true,
-          locationId: grad,
-          categoryId: oblast,
+          new: false,
+          locationId: grad.id,
+          categoryId: oblast.id,
           userId: 1, //izmeni
         };
-        await fetch(`http://localhost:3000/class/addClass`, {
+        await fetch(api + `class/addClass`, {
           withCredentials: true,
           method: "POST",
           headers: {
@@ -270,14 +272,33 @@ const TutorPocetna = () => {
         naslov !== "" &&
         opis !== ""
       ) {
-        const zamenaDoc = doc(db, "usluge", IDzamene);
-        await updateDoc(zamenaDoc, {
+        //const zamenaDoc = doc(db, "usluge", IDzamene);
+        /*await updateDoc(zamenaDoc, {
           kategorija: oblast,
           lokacija: grad,
           nazivUsluge: naslov,
           opis: opis,
           stepen: nivo,
           fotografija: slika,
+        });*/
+        let podaci = {
+          name: naslov,
+          bio: opis,
+          photo: "slika",
+          new: false,
+          locationId: grad.id,
+          categoryId: oblast.id,
+          userId: 1, //izmeni
+        };
+        await fetch(api + `class/updateClass/` + IDzamene, {
+          withCredentials: true,
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(podaci),
+        }).then((response) => {
+          return response.json();
         });
         setOpen(true);
         setPoruka("Usluga je uspešno promenjena!");
@@ -290,7 +311,7 @@ const TutorPocetna = () => {
   async function izmeniUslugu(idUsluge) {
     await ucitajUsluge();
     setPadajuci(true);
-    fetch(`http://localhost:3000/class/singleClass/` + idUsluge, {
+    fetch(api + `class/singleClass/` + idUsluge, {
       //OVDE TREBA ID USER-A
       method: "GET",
       withCredentials: true,
@@ -300,13 +321,13 @@ const TutorPocetna = () => {
       })
       .then((actualData) => {
         setOpen4(!open4);
-        fetch(`http://localhost:3000/level/` + actualData.category.id)
+        fetch(api + `level/` + actualData.category.id)
           .then((response) => {
             return response.json();
           })
           .then((data) => setNivo(data.id.toString())); //setNivo(data.id) OVO IZMENI DA BUDE BROJ OD 1 2 3 KAD PROCITA IZ BAZE
-        setOblast(actualData.category.name);
-        setGrad(actualData.location.name);
+        setOblast(actualData.category);
+        setGrad(actualData.location);
         setNaslov(actualData.name);
         setOpis(actualData.bio);
         setIDzamene(actualData.id);
@@ -328,7 +349,7 @@ const TutorPocetna = () => {
   }
 
   async function izbrisiUslugu(id) {
-    await fetch("http://localhost:3000/class/deleteClass/" + id, {
+    await fetch(api + "class/deleteClass/" + id, {
       method: "DELETE",
     });
     //await deleteDoc(doc(db, "usluge", id));
@@ -339,7 +360,7 @@ const TutorPocetna = () => {
   async function prikaziSrednjuOcenu(id) {
     //let average = 0;
     if (id != "") {
-      fetch(`http://localhost:3000/grade/averageGrade/` + id)
+      fetch(api + `grade/averageGrade/` + id)
         .then((response) => {
           return response.json();
         })
@@ -352,7 +373,7 @@ const TutorPocetna = () => {
 
   async function prijaviOcenu(id) {
     if (id != undefined) {
-      fetch("http://localhost:3000/grade/updateFlagged/" + id, {
+      fetch(api + "grade/updateFlagged/" + id, {
         //OVDE TREBA ID USER-A
         method: "PUT",
         withCredentials: true,
@@ -392,7 +413,7 @@ const TutorPocetna = () => {
 
   async function promeniOcenu(id) {
     if (id != undefined) {
-      fetch(`http://localhost:3000/grade/updateNew` + "/" + id, {
+      fetch(api + `grade/updateNew/` + id, {
         //OVDE TREBA ID USER-A
         method: "PUT",
         withCredentials: true,
@@ -405,7 +426,7 @@ const TutorPocetna = () => {
   async function prikaziOcene(id) {
     ucitajUsluge();
     if (id != undefined) {
-      fetch(`http://localhost:3000/grade` + "/" + id)
+      fetch(api + `grade/` + id)
         .then((response) => {
           return response.json();
         })
@@ -446,7 +467,7 @@ const TutorPocetna = () => {
             <FormControl fullWidth sx={{ mr: 2 }}>
               <InputLabel id="demo-simple-select-label">Oblast</InputLabel>
               <Select
-                defaultValue={oblast}
+                defaultValue={oblast.name}
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 label="Oblast"
@@ -461,7 +482,7 @@ const TutorPocetna = () => {
                   <MenuItem
                     key={oblast.id}
                     value={oblast.name}
-                    onClick={(e) => setOblast(oblast.id)}
+                    onClick={(e) => setOblast(oblast)}
                   >
                     {oblast.name}
                   </MenuItem>
@@ -473,7 +494,7 @@ const TutorPocetna = () => {
             <FormControl fullWidth sx={{ mr: 2 }}>
               <InputLabel id="demo-simple-select-label">Lokacija</InputLabel>
               <Select
-                defaultValue={grad}
+                defaultValue={grad.name}
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 label="Lokacija"
@@ -488,7 +509,7 @@ const TutorPocetna = () => {
                   <MenuItem
                     key={grad.id}
                     value={grad.name}
-                    onClick={(e) => setGrad(grad.id)}
+                    onClick={(e) => setGrad(grad)}
                   >
                     {grad.name}
                   </MenuItem>

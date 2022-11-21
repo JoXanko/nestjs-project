@@ -13,7 +13,7 @@ export class ClassService {
   constructor(
     @InjectRepository(Class) private classRepository: Repository<Class>,
     @InjectRepository(User) private userRepository: Repository<User>,
-    @InjectRepository(Grade) private gradeRepository: Repository<Grade>,
+    //@InjectRepository(Grade) private gradeRepository: Repository<Grade>,
     @InjectRepository(Location)
     private locationRepository: Repository<Location>,
     @InjectRepository(Category)
@@ -27,6 +27,26 @@ export class ClassService {
         id: idClass,
       },
     });
+  }
+
+  public async getSearchClass(locationId: number, categoryId: number) {
+    const classes = await this.classRepository.find({
+      relations: { location: true, category: true, grades: true },
+      where: { location: { id: locationId }, category: { id: categoryId } },
+    });
+    let sum = 0;
+    let count = 0;
+    classes.forEach((singleClass) => {
+      singleClass.grades.forEach((grade) => {
+        sum += grade.grade;
+        count++;
+        if (grade.new == true) singleClass.new = true;
+      });
+      singleClass.avgGrade = sum / count;
+      sum = 0;
+      count = 0;
+    });
+    return classes;
   }
 
   public async getById(idTutor: number) {
@@ -59,7 +79,6 @@ export class ClassService {
   }*/
 
   public async create(classDto: ClassDto) {
-    console.log(classDto);
     const newClass = new Class();
     const tutor = await this.userRepository.findOne({
       where: { id: classDto.userId },
@@ -84,6 +103,30 @@ export class ClassService {
 
     //const grade = this.gradeRepository.create(gradeDto);
     return await this.classRepository.save(newClass);
+  }
+
+  public async updateClass(classDto: ClassDto, classId: number) {
+    const classToUpdate = await this.classRepository.findOneBy({
+      id: classId,
+    });
+    classToUpdate.name = classDto.name;
+    classToUpdate.bio = classDto.bio;
+    classToUpdate.photo = classDto.photo;
+    const tutor = await this.userRepository.findOne({
+      where: { id: classDto.userId },
+    });
+
+    const location = await this.locationRepository.findOne({
+      where: { id: classDto.locationId },
+    });
+
+    const category = await this.categoryRepository.findOne({
+      where: { id: classDto.categoryId },
+    });
+    classToUpdate.user = tutor;
+    classToUpdate.location = location;
+    classToUpdate.category = category;
+    return await this.classRepository.save(classToUpdate);
   }
 
   public async delete(id: number) {

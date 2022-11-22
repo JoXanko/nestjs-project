@@ -411,7 +411,7 @@ const TutorPocetna = () => {
     });
   };
 
-  async function promeniOcenu(id) {
+  /*async function promeniOcenu(id) {
     if (id != undefined) {
       fetch(api + `grade/updateNew/` + id, {
         //OVDE TREBA ID USER-A
@@ -421,16 +421,25 @@ const TutorPocetna = () => {
         return response.json();
       });
     }
-  }
+  }*/
 
   async function prikaziOcene(id) {
     ucitajUsluge();
     if (id != undefined) {
-      fetch(api + `grade/` + id)
+      await fetch(api + `grade/` + id)
         .then((response) => {
           return response.json();
         })
         .then((actualData) => setOcene(actualData));
+    }
+    if (id != undefined) {
+      await fetch(api + `grade/updateNew/` + id, {
+        //OVDE TREBA ID USER-A
+        method: "PUT",
+        withCredentials: true,
+      }).then((response) => {
+        return response.json();
+      });
     }
     setOpen3(true);
     /*const zamenaDoc = doc(db, "usluge", id);
@@ -781,7 +790,10 @@ const TutorPocetna = () => {
                   >
                     <PopupDialogTitle
                       id="customized-dialog-title"
-                      onClose={() => setOpen3(false)}
+                      onClose={() => {
+                        ucitajUsluge();
+                        setOpen3(false);
+                      }}
                     >
                       Ocene
                     </PopupDialogTitle>
@@ -789,7 +801,7 @@ const TutorPocetna = () => {
                       <>
                         {ocene.map((ocena, index) => {
                           {
-                            promeniOcenu(ocena.id);
+                            /*promeniOcenu(ocena.id);*/
                           }
                           return (
                             <Grid

@@ -14,14 +14,17 @@ import { ApiTags } from '@nestjs/swagger';
 @Controller('chat')
 export class ChatController {
   constructor(private chatService: ChatService) {}
-  @Get()
+  /*@Get()
   public getChats() {
     return this.chatService.getAll();
-  }
+  }*/
 
-  @Get(':id')
-  public getChat(@Param('id', ParseIntPipe) id: number) {
-    return this.chatService.getById(id);
+  @Get('getChat/:idTutor/:idStudent')
+  public getChats(
+    @Param('idTutor', ParseIntPipe) idTutor: number,
+    @Param('idStudent', ParseIntPipe) idStudent: number,
+  ) {
+    return this.chatService.getById(idTutor, idStudent);
   }
 
   @Post()

@@ -23,8 +23,13 @@ export class ClassController {
   }
 
   @Get('classes/:id')
-  public getClass(@Param('id', ParseIntPipe) id: number) {
+  public getClasses(@Param('id', ParseIntPipe) id: number) {
     return this.classService.getById(id);
+  }
+
+  @Get('classesByUser/:id')
+  public getClassByUser(@Param('id', ParseIntPipe) id: number) {
+    return this.classService.getByIdUser(id);
   }
 
   @Get('classesSearch/:locationId/:categoryId')

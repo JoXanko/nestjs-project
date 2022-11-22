@@ -67,7 +67,7 @@ const UserPretraga = () => {
   const [niz2, setNiz2] = useState([]);
   const [oblast, setOblast] = useState({});
   const [grad, setGrad] = useState({});
-  const [nivo, setNivo] = useState("1");
+  const [nivo, setNivo] = useState("");
   const [usluge, setUsluge] = useState([]);
 
   const db = getFirestore(app);
@@ -82,7 +82,11 @@ const UserPretraga = () => {
         .then((response) => {
           return response.json();
         })
-        .then((actualData) => setUsluge(actualData));
+        .then((actualData) => {
+          if (actualData.length === 0)
+            toast.error("Nema dostupnih usluga za date parametre!");
+          setUsluge(actualData);
+        });
       /*const func = async () => {
                 const us = [];
                 const q = query(uslugeRef, where("lokacija", "==", grad), where("kategorija", "==", oblast), where("stepen", "==", nivo));
@@ -96,7 +100,7 @@ const UserPretraga = () => {
                     toast.error("Nema dostupnih usluga za date parametre!");
             }
             func();*/
-    }
+    } else toast.warn("Unesite sve potrebne parametre!");
   };
 
   useEffect(() => {
@@ -108,12 +112,13 @@ const UserPretraga = () => {
             const querySnapshot1 = await getDocs(q1);
             querySnapshot1.forEach((doc) => obl.push(doc.data().nazivKategorije));
             setNiz1(obl);*/
-      fetch(api + `category/` + nivo)
-        .then((response) => {
-          return response.json();
-        })
-        .then((actualData) => setNiz1(actualData));
-
+      if (nivo != "") {
+        fetch(api + `category/` + nivo)
+          .then((response) => {
+            return response.json();
+          })
+          .then((actualData) => setNiz1(actualData));
+      }
       /*const q2 = query(lokacijeRef);
             const querySnapshot2 = await getDocs(q2);
             querySnapshot2.forEach((doc) => gradovi.push(doc.data().grad));

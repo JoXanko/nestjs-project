@@ -36,6 +36,9 @@ export class Class {
   @Column({ default: 0 })
   avgGrade: number;
 
+  @Column({ default: 0 })
+  numberOfGrades: number;
+
   @Column({ default: '' })
   photo: string;
 

@@ -37,6 +37,23 @@ export class GradeService {
     if (count == 0) return 0;
     return Number(sum / count);
   }
+
+  public async didUserGraded(classId: number, userId: number) {
+    const grade = await this.gradeRepository.findOne({
+      relations: { class: true, student: true },
+      where: {
+        student: {
+          id: userId,
+        },
+        class: {
+          id: classId,
+        },
+      },
+    });
+    if (grade != null) return grade;
+    else return false;
+  }
+
   public getById(classId: number) {
     //za tutora pregled ocena
     return this.gradeRepository.find({

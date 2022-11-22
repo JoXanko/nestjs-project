@@ -9,6 +9,7 @@ import { ClassModule } from './app/class/class/class.module';
 import { GradeModule } from './app/grade/grade/grade.module';
 import { LevelModule } from './app/level/level/level.module';
 import { LocationModule } from './app/location/location/location.module';
+import { MessageModule } from './app/message/message/message.module';
 import { UserModule } from './app/user/user/user.module';
 
 @Module({
@@ -21,6 +22,7 @@ import { UserModule } from './app/user/user/user.module';
     LevelModule,
     LocationModule,
     UserModule,
+    MessageModule,
   ],
   controllers: [AppController],
   providers: [AppService],

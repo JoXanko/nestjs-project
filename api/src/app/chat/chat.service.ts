@@ -14,10 +14,13 @@ export class ChatService {
     return this.chatRepository.find();
   }
 
-  public getById(id: number) {
-    return this.chatRepository.findOne({
-      where: { id }, //??ovako treba?
+  public async getById(idTutor: number, idStudent: number) {
+    const chats = await this.chatRepository.findOne({
+      relations: { student: true, tutor: true },
+      where: { student: { id: idStudent }, tutor: { id: idTutor } },
     });
+    if (chats != null) return chats;
+    else return false;
   }
 
   public async create(chatDto: ChatDto) {

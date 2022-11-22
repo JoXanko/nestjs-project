@@ -32,8 +32,13 @@ export class GradeController {
     return this.gradeService.getAverageGrade(id);
   }
 
-  @Post()
-  public addLocation(@Body() dto: GradeDto) {
+  @Get('userGrade/:idClass/:idUser')
+  public getDidUserGraded(@Param('idClass', ParseIntPipe) idClass: number,@Param('idUser', ParseIntPipe) idUser: number) {
+    return this.gradeService.didUserGraded(idClass,idUser);
+  }
+
+  @Post('addGrade')
+  public addGrade(@Body() dto: GradeDto) {
     return this.gradeService.create(dto);
   }
 

@@ -29,9 +29,30 @@ export class ClassService {
     });
   }
 
+  public async getByIdUser(userId: number) {
+    const classes = await this.classRepository.find({
+      relations: { location: true, category: true, grades: true, user: true },
+      where: { user: { id: userId } },
+    });
+    let sum = 0;
+    let count = 0;
+    classes.forEach((singleClass) => {
+      singleClass.grades.forEach((grade) => {
+        sum += grade.grade;
+        count++;
+        if (grade.new == true) singleClass.new = true;
+      });
+      singleClass.avgGrade = sum / count;
+      singleClass.numberOfGrades = count;
+      sum = 0;
+      count = 0;
+    });
+    return classes;
+  }
+
   public async getSearchClass(locationId: number, categoryId: number) {
     const classes = await this.classRepository.find({
-      relations: { location: true, category: true, grades: true },
+      relations: { location: true, category: true, grades: true, user: true },
       where: { location: { id: locationId }, category: { id: categoryId } },
     });
     let sum = 0;
@@ -43,6 +64,7 @@ export class ClassService {
         if (grade.new == true) singleClass.new = true;
       });
       singleClass.avgGrade = sum / count;
+      singleClass.numberOfGrades = count;
       sum = 0;
       count = 0;
     });
@@ -67,6 +89,7 @@ export class ClassService {
         if (grade.new == true) singleClass.new = true;
       });
       singleClass.avgGrade = sum / count;
+      singleClass.numberOfGrades = count;
       sum = 0;
       count = 0;
     });

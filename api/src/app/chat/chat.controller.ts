@@ -14,10 +14,10 @@ import { ApiTags } from '@nestjs/swagger';
 @Controller('chat')
 export class ChatController {
   constructor(private chatService: ChatService) {}
-  /*@Get()
-  public getChats() {
-    return this.chatService.getAll();
-  }*/
+  @Get('getChatForUser/:idUser')
+  public getChatsForUser(@Param('idUser', ParseIntPipe) idUser: number) {
+    return this.chatService.getAll(idUser);
+  }
 
   @Get('getChat/:idTutor/:idStudent')
   public getChats(

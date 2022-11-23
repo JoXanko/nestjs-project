@@ -62,7 +62,7 @@ import { api } from "../App";
 
 const TutorProfil = (props) => {
   const location = useLocation();
-  console.log(location.state.idUser); //location.state.idUser ID USERA!!!!!!!!
+  console.log(location.state.idUser); //location.state.idUser ID TUTORA!!!!!!!!
   const navigate = useNavigate();
   let { id } = useParams();
   console.log("ovo je id " + id);
@@ -78,6 +78,14 @@ const TutorProfil = (props) => {
 
   const doPoruka = () => {
     const func = async () => {
+      fetch(api + `chat/getChat/` + location.state.idUser + "/" + 2) //umesto 2 ide ID PRIJAVLJENOG PROFILA
+        .then((response) => {
+          return response.json();
+        })
+        .then((actualData) => {
+          console.log(actualData)
+          navigate("/chat",{state:actualData});//sa actualData
+        });
       //ako postoji nadji ako ne postoji napravi
       /*await getDocs(
         query(
@@ -97,7 +105,6 @@ const TutorProfil = (props) => {
           }
         })
         .then(() => navigate("/chat"));*/
-      
     };
     if (auth.currentUser !== null) func();
   };

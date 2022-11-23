@@ -201,7 +201,7 @@ const UserPretraga = () => {
                 value="nivoOsnovne"
                 control={
                   <Radio
-                    onChange={(event) => setNivo("1")}
+                    onChange={(event) => {setOblast(""); setNivo("1")}}
                     checked={nivo === "1"}
                   />
                 }
@@ -211,7 +211,7 @@ const UserPretraga = () => {
                 value="nivoSrednje"
                 control={
                   <Radio
-                    onChange={(event) => setNivo("2")}
+                    onChange={(event) => {setOblast(""); setNivo("2")}}
                     checked={nivo === "2"}
                   />
                 }
@@ -221,7 +221,7 @@ const UserPretraga = () => {
                 value="nivoFakulteta"
                 control={
                   <Radio
-                    onChange={(event) => setNivo("3")}
+                    onChange={(event) => {setOblast(""); setNivo("3")}}
                     checked={nivo === "3"}
                   />
                 }

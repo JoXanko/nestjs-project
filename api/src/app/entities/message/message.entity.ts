@@ -13,6 +13,12 @@ export class Message {
   @Column()
   date: string;
 
+  @Column({ default: false })
+  seen: boolean;
+
+  @Column()
+  senderId: number;
+
   @ManyToOne(() => Chat, {
     onDelete: 'CASCADE',
   })

@@ -14,6 +14,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 
+import { api } from "../App.js";
 import { app } from "../App";
 import Grid from "@mui/material/Grid";
 import { Button, TextField, Paper } from "@mui/material";
@@ -24,7 +25,7 @@ import Box from "@mui/material/Box";
 import SendIcon from "@mui/icons-material/Send";
 
 const SingleChat = (props) => {
-  console.log(props);
+  console.log(props); //props je ceo chat id/student/tutor
   const skrol = useRef();
 
   const auth = getAuth(app);
@@ -33,6 +34,26 @@ const SingleChat = (props) => {
   const [novaPoruka, setNovaPoruka] = useState("");
 
   const posaljiPoruku = async () => {
+    let podaci = {
+      text: novaPoruka,
+      date: Date.now(),
+      senderId: 2, //TREBA TRENUTNI PRIJAVLJENI ID
+      chatId: props.sagovornik.id,
+    };
+    console.log(podaci);
+    await fetch(api + `message/messageSend`, {
+      withCredentials: true,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(podaci),
+    }).then((response) => {
+      setNovaPoruka("");
+      return response.json();
+    });
+    ucitajPoruke();
+    skrol.current.scrollIntoView({ behavior: "smooth" });
     /*
         if (novaPoruka !== '') {
             await addDoc(collection(db, "konverzacije/" + props.sagovornik.idKonvo + "/poruke"), {
@@ -51,8 +72,21 @@ const SingleChat = (props) => {
     skrol.current.scrollIntoView({ behavior: "auto" });
   }, [messages]);
 
+  const ucitajPoruke = async () => {
+    await fetch(api + `message/getChatMessages/` + props.sagovornik.id)
+      .then((response) => {
+        return response.json();
+      })
+      .then((actualData) => setMessages(actualData));
+  };
   useEffect(() => {
-    const porukeRef = query(
+    const interval = setInterval(() => {
+      //POKUPI SVE PORUKE!!!
+
+      ucitajPoruke();
+    }, 1000);
+    //console.log(messages); //MEESAGE NIJE MAP..?
+    /*const porukeRef = query(
       collection(db, "konverzacije/" + props.sagovornik.idKonvo + "/poruke"),
       orderBy("datumVreme", "asc")
     );
@@ -62,7 +96,9 @@ const SingleChat = (props) => {
         poruke.push(doc.data());
       });
       setMessages(poruke);
-    });
+    });*/
+
+    return () => clearInterval(interval);
   }, [props.sagovornik]);
 
   return (
@@ -86,14 +122,17 @@ const SingleChat = (props) => {
         }}
       >
         {props.sagovornik.student.id ===
-                  2 /*TREBA PRAVI ID PRIJAVLJENOG OVDE!!!!!!!!!!!!!!*/ ? (
-                    <Avatar
-                    src={props.sagovornik.tutor.imageUrl}
-                    style={{ marginRight: "1rem" }}
-                  ></Avatar>) : (        <Avatar
-                    src={props.sagovornik.student.imageUrl}
-                    style={{ marginRight: "1rem" }}
-                  ></Avatar>)}
+        2 /*TREBA PRAVI ID PRIJAVLJENOG OVDE!!!!!!!!!!!!!!*/ ? (
+          <Avatar
+            src={props.sagovornik.tutor.imageUrl}
+            style={{ marginRight: "1rem" }}
+          ></Avatar>
+        ) : (
+          <Avatar
+            src={props.sagovornik.student.imageUrl}
+            style={{ marginRight: "1rem" }}
+          ></Avatar>
+        )}
         <Typography variant="h4">
           {props.sagovornik.student.id ===
           2 /*TREBA PRAVI ID PRIJAVLJENOG OVDE!!!!!!!!!!!!!!*/
@@ -106,16 +145,16 @@ const SingleChat = (props) => {
 
       <div style={{ height: "80%", overflowY: "scroll" }}>
         {messages.map((message) => {
-          const date = message["datumVreme"];
-          const dateObject = new Date(date * 1000);
-          const humanDateFormat = dateObject.toLocaleTimeString();
-          if (message["od"] == auth.currentUser.uid) {
+          const date = new Date(Number(message.date));
+          const humanDateFormat = date.toLocaleTimeString();
+          if (message.senderId === 2) {
+            //TREBA ID PRIJAVLJENOG!
             return (
               <div style={{ display: "flex", flexDirection: "row-reverse" }}>
                 <Box>
                   <ChipCopy
                     ja={true}
-                    poruka={message}
+                    poruka={message.text}
                     vreme={humanDateFormat}
                     boja={"#1f5d78"}
                   />
@@ -126,19 +165,18 @@ const SingleChat = (props) => {
             return (
               <div>
                 <Box>
-                  {props.sagovornik.student.id ===
-                  2 /*TREBA PRAVI ID PRIJAVLJENOG OVDE!!!!!!!!!!!!!!*/ ? (
-                    <ChipCopy
+                  {props.sagovornik.student.id === message.senderId ? (
+                    /*TREBA PRAVI ID PRIJAVLJENOG OVDE!!!!!!!!!!!!!!*/ <ChipCopy
                       foto={props.sagovornik.tutor.imageUrl}
                       vreme={humanDateFormat}
-                      poruka={message}
+                      poruka={message.text}
                       boja={"gray"}
                     />
                   ) : (
                     <ChipCopy
                       foto={props.sagovornik.student.imageUrl}
                       vreme={humanDateFormat}
-                      poruka={message}
+                      poruka={message.text}
                       boja={"gray"}
                     />
                   )}

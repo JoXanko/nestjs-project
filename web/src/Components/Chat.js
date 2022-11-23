@@ -185,24 +185,24 @@ const Chat = () => {
           </Grid>
           {filtrirano.map(
             (
-              korisnik //korisnik je zapravo moj chat?
+              chat //korisnik je zapravo moj chat?
             ) => (
               <Grid item xs={12} sm={12} md={12} mt="1rem">
                 <div
                   className="contact"
                   onClick={(event) => {
-                    korisnik.student.id ===
+                    chat.student.id ===
                     2 /*TREBA PRAVI ID PRIJAVLJENOG OVDE!!!!!!!!!!!!!!*/
-                      ? setPrikaz(korisnik)
-                      : setPrikaz(korisnik); //postavi chat kao glavni koristi se u singleChat
+                      ? setPrikaz(chat)
+                      : setPrikaz(chat); //postavi chat kao glavni koristi se u singleChat
                   }}
                 >
-                  <Avatar alt={undf} margin="auto" src={korisnik.fotografija} />
+                  <Avatar alt={undf} margin="auto" src={chat.fotografija} />
                   <Typography margin="auto" align="center" sx={{ ml: 1.5 }}>
-                    {korisnik.student.id ===
+                    {chat.student.id ===
                     2 /*TREBA PRAVI ID PRIJAVLJENOG OVDE!!!!!!!!!!!!!!*/
-                      ? korisnik.tutor.name + " " + korisnik.tutor.surname
-                      : korisnik.student.name + " " + korisnik.student.surname}
+                      ? chat.tutor.name + " " + chat.tutor.surname
+                      : chat.student.name + " " + chat.student.surname}
                   </Typography>
                   {/*korisnik.neprocitane > 0 ? (
                   <Chip label={korisnik.neprocitane} color="error"></Chip>

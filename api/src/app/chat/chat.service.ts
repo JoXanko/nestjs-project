@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Chat } from '../entities/chat/chat.entity';
 import { ChatDto } from '../entities/chat/dto/chat.dto';
+import { Message } from '../entities/message/message.entity';
 import { User } from '../entities/user/user.entity';
 
 @Injectable()
@@ -10,6 +11,7 @@ export class ChatService {
   constructor(
     @InjectRepository(Chat) private chatRepository: Repository<Chat>,
     @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(Message) private messageRepository: Repository<Message>,
   ) {}
 
   public async getAll(idUser: number) {
@@ -17,11 +19,37 @@ export class ChatService {
       relations: { student: true, tutor: true },
       where: { student: { id: idUser } },
     });
+    let newMessages = false;
+    ifStudent.forEach(async (chat) => {
+      const messages = await this.messageRepository.find({
+        relations: { chat: true },
+        where: { chat: { id: chat.id } },
+      });
+      messages.forEach((message) => {
+        if (message.seen == false) newMessages = true;
+      });
+      if (newMessages == true) chat.seen == true;
+      newMessages = false;
+    });
+
     if (ifStudent.length == 0) {
-      return await this.chatRepository.find({
+      const chats = await this.chatRepository.find({
         relations: { student: true, tutor: true },
         where: { tutor: { id: idUser } },
       });
+      let newMessages = false;
+      chats.forEach(async (chat) => {
+        const messages = await this.messageRepository.find({
+          relations: { chat: true },
+          where: { chat: { id: chat.id } },
+        });
+        messages.forEach((message) => {
+          if (message.seen == false) newMessages = true;
+        });
+        if (newMessages == true) chat.seen == true;
+        newMessages = false;
+      });
+      return chats;
     } else return ifStudent;
   }
 

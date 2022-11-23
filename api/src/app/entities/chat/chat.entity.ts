@@ -18,6 +18,9 @@ export class Chat {
   @ManyToOne(() => User)
   student: User;
 
+  @Column({ default: false })
+  seen: boolean;
+  
   @ManyToOne(() => User)
   tutor: User;
 

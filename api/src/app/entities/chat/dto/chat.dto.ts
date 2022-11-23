@@ -4,5 +4,6 @@ import { User } from '../../user/user.entity';
 export class ChatDto {
   studentId: number;
   tutorId: number;
+  seen: boolean;
   messages: Message[];
 }

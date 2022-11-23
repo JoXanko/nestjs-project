@@ -18,9 +18,14 @@ export class MessageController {
     return this.messageService.getAll();
   }
 
-  @Get(':id')
-  public getMessage(@Param('id', ParseIntPipe) id: number) {
-    return this.messageService.getById(id);
+  @Get('getChatMessages/:idChat')
+  public getMessage(@Param('idChat', ParseIntPipe) idChat: number) {
+    return this.messageService.getById(idChat);
+  }
+
+  @Post('messageSend')
+  public postMessage(@Body() dto: MessageDto) {
+    return this.messageService.postMessage(dto);
   }
 
   @Post()

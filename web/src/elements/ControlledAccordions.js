@@ -29,9 +29,9 @@ export const ControlledAccordions = (props) => {
     const handleEvent = (event) => {
         let temp = props.usluge;
         if (event.target.value === "Najbolje ocenjen") {
-            temp.sort((a, b) => b.srednjaOcena - a.srednjaOcena);
+            temp.sort((a, b) => b.avgGrade - a.avgGrade);
         } else if (event.target.value === "Najvise ocena") {
-            temp.sort((a, b) => b.brojOcena - a.brojOcena);
+            temp.sort((a, b) => b.numberOfGrades - a.numberOfGrades);
         }
 
         setNiz(temp);
@@ -91,9 +91,9 @@ export const ControlledAccordions = (props) => {
                                         Naslov: {usluga.name}
                                     </Typography>
                                     <Typography style={{ display: 'flex', alignItems: 'center' }} color='primary' component="h1" fontWeight='500' variant="h6" >
-                                        Ocena:
+                                        Prosečna ocena:
                                         <Rating name="read-only" precision={0.1} value={usluga.avgGrade} readOnly sx={{marginLeft:"0.5rem", marginRight:"1rem"}}/>
-                                        Od {usluga.brojOcena} ocena
+                                        Od {usluga.numberOfGrades} ocena
                                     </Typography>
                                 </Box>
 

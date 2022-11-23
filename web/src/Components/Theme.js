@@ -54,7 +54,7 @@ export const ChipCopy = (props) => {
     <Box margin={"1rem"} display={"flex"} flexDirection={"column"} alignItems={props.ja ? "flex-end" : "flex-start"} justifyContent={"flex-start"} maxWidth={"max-content"} width="400px" style={{ padding: '0.5rem'}}>
       <Box display={"flex"} flexDirection={"row"} alignItems={'center'} justifyContent={"space-between"} maxWidth={"max-content"} width="400px" style={{ backgroundColor: props.boja, color: 'white', borderRadius: '20px', padding: '0.5rem'}}>
         {props.ja == true ? null : <Avatar alt={undf} src={props.foto} />}
-        <Typography marginLeft={"10px"} marginRight={"10px"}>{props.poruka.poruka}</Typography>
+        <Typography marginLeft={"10px"} marginRight={"10px"}>{props.poruka}</Typography>
       </Box>
       <Box display={"flex"} flexDirection={"row"} alignItems={'center'} paddingLeft={"0.5rem"} paddingRight={"0.5rem"} justifyContent={props.ja ? "flex-end" : "flex-start"} width="400px">
         <Typography>{props.vreme}</Typography>

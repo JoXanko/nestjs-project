@@ -51,14 +51,16 @@ const Chat = () => {
   const [filtrirano, setFiltrirano] = useState([]);
 
   //OVO NE RADI AL BI BILO LEPO DA RADI!
-  /*useEffect(() => {
+  useEffect(() => {
     let temp = listaKorisnika.filter((e) => {
+      console.log((e.student.name + " " + e.student.surname).includes(filter));
       //ТРЕБА ПРАВИ ИД УЛОГОВАНОГ ПРОФИЛА!!
-      if (e.student.id === 2) (e.tutor.name + " " + e.tutor.surname).includes(filter);
+      if (e.student.id === 2)
+        (e.tutor.name + " " + e.tutor.surname).includes(filter);
       else (e.student.name + " " + e.student.surname).includes(filter);
     });
     setFiltrirano(temp);
-  }, [filter]);*/
+  }, [filter]);
 
   /*const otvoriChat = (event, obj) => {
     let temp = {};
@@ -204,9 +206,9 @@ const Chat = () => {
                       ? chat.tutor.name + " " + chat.tutor.surname
                       : chat.student.name + " " + chat.student.surname}
                   </Typography>
-                  {/*korisnik.neprocitane > 0 ? (
-                  <Chip label={korisnik.neprocitane} color="error"></Chip>
-                ) : null*/}
+                  {chat.seen == true ? (
+                    <Chip label={"Nova poruka"} color="warning"></Chip>
+                  ) : null}
                 </div>
               </Grid>
             )

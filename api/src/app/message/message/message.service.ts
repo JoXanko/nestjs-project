@@ -30,6 +30,8 @@ export class MessageService {
       where: { id: messageDto.chatId },
     });
 
+    chat.seen = true;
+    await this.chatRepository.save(chat);
     newMessage.date = messageDto.date;
     newMessage.text = messageDto.text;
     newMessage.senderId = messageDto.senderId;

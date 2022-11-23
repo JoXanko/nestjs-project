@@ -1,6 +1,7 @@
 import { ChatService } from './chat.service';
 import {
   Body,
+  Put,
   Controller,
   Get,
   Param,
@@ -30,6 +31,11 @@ export class ChatController {
   @Post()
   public addChat(@Body() dto: ChatDto) {
     return this.chatService.create(dto);
+  }
+
+  @Put('updateSeen/:idChat')
+  public updateSeen(@Param('idChat', ParseIntPipe) idChat: number) {
+    return this.chatService.updateSeen(idChat);
   }
 
   /*@Delete(":id")//ZA ADMINA????

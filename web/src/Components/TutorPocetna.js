@@ -85,7 +85,7 @@ const TutorPocetna = () => {
   /*const auth = getAuth(app);
   const db = getFirestore(app);*/
   let userLogged = localStorage.getItem("user");
-  const [user, setUser] = useState({});
+  const user = JSON.parse(userLogged);
   //const [show, setShow] = useState(false);
   const [naslov, setNaslov] = useState("");
   const [opis, setOpis] = useState("");
@@ -179,6 +179,7 @@ const TutorPocetna = () => {
       us.push(doc.data());
       usID.push(doc.id);
     });*/
+    console.log(user.id);
     fetch(api + `class/classes/` + user.id, {
       //OVDE TREBA ID USER-A
       method: "GET",
@@ -196,8 +197,8 @@ const TutorPocetna = () => {
     setUslugeID(usID);
   };
   useEffect(() => {
-    const obj = JSON.parse(userLogged);
-    setUser(obj);
+    /*const obj = JSON.parse(userLogged);
+    setUser(obj);*/
     const getGradovi = async () => {
       fetch(api + `location`, {
         method: "GET",
@@ -245,7 +246,7 @@ const TutorPocetna = () => {
         let podaci = {
           name: naslov,
           bio: opis,
-          photo: "slika",
+          photo: slika,
           new: false,
           locationId: grad.id,
           categoryId: oblast.id,
@@ -287,7 +288,7 @@ const TutorPocetna = () => {
         let podaci = {
           name: naslov,
           bio: opis,
-          photo: "slika",
+          photo: slika,
           new: false,
           locationId: grad.id,
           categoryId: oblast.id,
@@ -566,7 +567,7 @@ const TutorPocetna = () => {
                   }}
                 >
                   <Typography component="h1" variant="h4">
-                    Zdravo {user.name+" "+user.surname},
+                    Zdravo {user.name + " " + user.surname},
                   </Typography>
                   <Typography component="h1" variant="h5">
                     Dobro došli na ITutor!

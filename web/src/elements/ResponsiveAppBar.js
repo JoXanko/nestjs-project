@@ -40,6 +40,8 @@ import {
 import { api } from "../App";
 
 const ResponsiveAppBar = (props) => {
+  let userLogged = localStorage.getItem("user");
+  const [user, setUser] = useState({});
   const [anchorElUser, setAnchorElUser] = useState(null);
   const navigate = useNavigate();
   const auth = getAuth(app);
@@ -48,7 +50,11 @@ const ResponsiveAppBar = (props) => {
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
-
+  useEffect(() => {
+    const obj = JSON.parse(userLogged);
+    setUser(obj);
+    //console.log(user)
+  }, []);
   /*const func = async () => {
     const db = getFirestore(app);
     const uRef = collection(db, "ucenici");
@@ -78,8 +84,10 @@ const ResponsiveAppBar = (props) => {
     fetch(api + `auth/logout`, {
       method: "GET",
       withCredentials: true,
-    })
-      .then((actualData) => {navigate("/login"); localStorage.removeItem("user")});
+    }).then((actualData) => {
+      navigate("/login");
+      localStorage.removeItem("user");
+    });
   };
 
   return (
@@ -118,7 +126,7 @@ const ResponsiveAppBar = (props) => {
             <Box sx={{ ml: 2 }}>
               <Tooltip title="Otvorite podešavanja">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="U" src={props.user?.photoURL} />
+                  <Avatar alt="U" src={user?.imageUrl} />
                 </IconButton>
               </Tooltip>
               <Menu

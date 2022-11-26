@@ -14,7 +14,10 @@ export class CategoryService {
     private levelRepository: Repository<Level>,
   ) {}
 
-  public getAll(idLevel: number) {
+  public getAll() {
+    return this.categoryRepository.find();
+  }
+  public getById(idLevel: number) {
     return this.categoryRepository.find({
       relations: { level: true },
       where: {

@@ -27,7 +27,8 @@ import SendIcon from "@mui/icons-material/Send";
 const SingleChat = (props) => {
   console.log(props); //props je ceo chat id/student/tutor
   const skrol = useRef();
-
+  let userLogged = localStorage.getItem("user");
+  const user = JSON.parse(userLogged);
   const auth = getAuth(app);
   const db = getFirestore(app);
   const [messages, setMessages] = useState([]);
@@ -37,7 +38,7 @@ const SingleChat = (props) => {
     let podaci = {
       text: novaPoruka,
       date: Date.now(),
-      senderId: 2, //TREBA TRENUTNI PRIJAVLJENI ID
+      senderId: user.id, //TREBA TRENUTNI PRIJAVLJENI ID
       chatId: props.sagovornik.id,
     };
     console.log(podaci);
@@ -122,7 +123,7 @@ const SingleChat = (props) => {
         }}
       >
         {props.sagovornik.student.id ===
-        2 /*TREBA PRAVI ID PRIJAVLJENOG OVDE!!!!!!!!!!!!!!*/ ? (
+        user.id /*TREBA PRAVI ID PRIJAVLJENOG OVDE!!!!!!!!!!!!!!*/ ? (
           <Avatar
             src={props.sagovornik.tutor.imageUrl}
             style={{ marginRight: "1rem" }}
@@ -135,7 +136,7 @@ const SingleChat = (props) => {
         )}
         <Typography variant="h4">
           {props.sagovornik.student.id ===
-          2 /*TREBA PRAVI ID PRIJAVLJENOG OVDE!!!!!!!!!!!!!!*/
+          user.id /*TREBA PRAVI ID PRIJAVLJENOG OVDE!!!!!!!!!!!!!!*/
             ? props.sagovornik.tutor.name + " " + props.sagovornik.tutor.surname
             : props.sagovornik.student.name +
               " " +
@@ -147,7 +148,7 @@ const SingleChat = (props) => {
         {messages.map((message) => {
           const date = new Date(Number(message.date));
           const humanDateFormat = date.toLocaleTimeString();
-          if (message.senderId === 2) {
+          if (message.senderId === user.id) {
             //TREBA ID PRIJAVLJENOG!
             return (
               <div style={{ display: "flex", flexDirection: "row-reverse" }}>
@@ -165,7 +166,7 @@ const SingleChat = (props) => {
             return (
               <div>
                 <Box>
-                  {props.sagovornik.student.id === message.senderId ? (
+                  {props.sagovornik.student.id === user.id ? (
                     /*TREBA PRAVI ID PRIJAVLJENOG OVDE!!!!!!!!!!!!!!*/ <ChipCopy
                       foto={props.sagovornik.tutor.imageUrl}
                       vreme={humanDateFormat}

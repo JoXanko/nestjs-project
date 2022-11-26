@@ -29,6 +29,12 @@ export class ClassService {
     });
   }
 
+  public getAll() {
+    return this.classRepository.find({
+      relations: { category: true, location: true },
+    });
+  }
+
   public async getByIdUser(userId: number) {
     const classes = await this.classRepository.find({
       relations: { location: true, category: true, grades: true, user: true },

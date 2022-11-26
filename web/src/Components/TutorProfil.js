@@ -61,6 +61,8 @@ import { Avatar, Rating } from "@mui/material";
 import { api } from "../App";
 
 const TutorProfil = (props) => {
+  let userLogged = localStorage.getItem("user");
+  const user = JSON.parse(userLogged);
   const location = useLocation();
   console.log(location.state.idUser); //location.state.idUser ID TUTORA!!!!!!!!
   const navigate = useNavigate();
@@ -77,14 +79,15 @@ const TutorProfil = (props) => {
   const [ocenjeno, setOcenjeno] = useState({});
 
   const doPoruka = () => {
+    console.log(user.id);
     const func = async () => {
-      fetch(api + `chat/getChat/` + location.state.idUser + "/" + 2) //umesto 2 ide ID PRIJAVLJENOG PROFILA
+      fetch(api + `chat/getChat/` + location.state.idUser + "/" + user.id)
         .then((response) => {
           return response.json();
         })
         .then((actualData) => {
-          console.log(actualData)
-          navigate("/chat",{state:actualData});//sa actualData
+          console.log(actualData);
+          navigate("/chat", { state: actualData }); //sa actualData
         });
       //ako postoji nadji ako ne postoji napravi
       /*await getDocs(
@@ -106,7 +109,7 @@ const TutorProfil = (props) => {
         })
         .then(() => navigate("/chat"));*/
     };
-    if (auth.currentUser !== null) func();
+    if (user.id !== null) func();
   };
 
   const prikaziVise = (obj) => {
@@ -150,7 +153,7 @@ const TutorProfil = (props) => {
       let podaci = {
         date: Timestamp.now(),
         comment: komentar,
-        studentId: 1, //ID PRIJAVLJENOG PROFILA!!!!
+        studentId: user.id,
         grade: value,
         classId: izabrani.id,
       };

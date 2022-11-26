@@ -40,6 +40,11 @@ export class ClassController {
     return this.classService.getSearchClass(locationId, categoryId);
   }
 
+  @Get()
+  public getAllClasses() {
+    return this.classService.getAll();
+  }
+
   @Post('addClass')
   public addClass(@Body() dto: ClassDto) {
     return this.classService.create(dto);

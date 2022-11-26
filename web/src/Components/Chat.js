@@ -37,7 +37,8 @@ import { api } from "../App";
 const Chat = () => {
   const location = useLocation();
   //console.log(location.state);
-
+  let userLogged = localStorage.getItem("user");
+  const user = JSON.parse(userLogged);
   const auth = getAuth(app);
   const db = getFirestore(app);
   const [listaKorisnika, setListaKorisnika] = useState([]);
@@ -51,7 +52,7 @@ const Chat = () => {
   const [filtrirano, setFiltrirano] = useState([]);
 
   //OVO NE RADI AL BI BILO LEPO DA RADI!
-  useEffect(() => {
+  /*useEffect(() => {
     let temp = listaKorisnika.filter((e) => {
       console.log((e.student.name + " " + e.student.surname).includes(filter));
       //ТРЕБА ПРАВИ ИД УЛОГОВАНОГ ПРОФИЛА!!
@@ -60,7 +61,7 @@ const Chat = () => {
       else (e.student.name + " " + e.student.surname).includes(filter);
     });
     setFiltrirano(temp);
-  }, [filter]);
+  }, [filter]);*/
 
   /*const otvoriChat = (event, obj) => {
     let temp = {};
@@ -98,7 +99,7 @@ const Chat = () => {
     let temp = [];
 
     const getKonverzacije = async () => {
-      fetch(api + `chat/getChatForUser/` + 2) //umesto 2 ide ID PRIJAVLJENOG PROFILA
+      fetch(api + `chat/getChatForUser/` + user.id) //umesto 2 ide ID PRIJAVLJENOG PROFILA
         .then((response) => {
           return response.json();
         })
@@ -194,7 +195,7 @@ const Chat = () => {
                   className="contact"
                   onClick={(event) => {
                     chat.student.id ===
-                    2 /*TREBA PRAVI ID PRIJAVLJENOG OVDE!!!!!!!!!!!!!!*/
+                    user.id /*TREBA PRAVI ID PRIJAVLJENOG OVDE!!!!!!!!!!!!!!*/
                       ? setPrikaz(chat)
                       : setPrikaz(chat); //postavi chat kao glavni koristi se u singleChat
                   }}
@@ -202,13 +203,13 @@ const Chat = () => {
                   <Avatar alt={undf} margin="auto" src={chat.fotografija} />
                   <Typography margin="auto" align="center" sx={{ ml: 1.5 }}>
                     {chat.student.id ===
-                    2 /*TREBA PRAVI ID PRIJAVLJENOG OVDE!!!!!!!!!!!!!!*/
+                    user.id /*TREBA PRAVI ID PRIJAVLJENOG OVDE!!!!!!!!!!!!!!*/
                       ? chat.tutor.name + " " + chat.tutor.surname
                       : chat.student.name + " " + chat.student.surname}
                   </Typography>
-                  {chat.seen == true ? (
+                  {/*chat.seen == true ? (
                     <Chip label={"Nova poruka"} color="warning"></Chip>
-                  ) : null}
+                  ) : null*/}
                 </div>
               </Grid>
             )

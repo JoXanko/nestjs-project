@@ -18,13 +18,13 @@ export class CategoryController {
   constructor(private categoryService: CategoryService) {}
   @Get(':id')
   public getCategories(@Param('id', ParseIntPipe) id: number) {
-    return this.categoryService.getAll(id);
+    return this.categoryService.getById(id);
   }
 
-  /*@Get(':id')
-  public getCategory(@Param('id', ParseIntPipe) id: number) {
-    return this.categoryService.getById(id);
-  }*/
+  @Get()
+  public getCategory() {
+    return this.categoryService.getAll();
+  }
 
   @Post()
   public addCategory(@Body() dto: CategoryDto) {

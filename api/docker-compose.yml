@@ -1,0 +1,21 @@
+version: '3'
+
+networks:
+  redis:
+    driver: bridge
+
+services:
+  redis:
+    image: redis
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --include /usr/local/etc/redis/redis.conf
+    volumes:
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    networks:
+      - redis
+
+volumes:
+  pgdata:
+    external: true

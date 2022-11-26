@@ -82,9 +82,10 @@ const MenuProps = {
   },
 };
 const TutorPocetna = () => {
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-
+  /*const auth = getAuth(app);
+  const db = getFirestore(app);*/
+  let userLogged = localStorage.getItem("user");
+  const [user, setUser] = useState({});
   //const [show, setShow] = useState(false);
   const [naslov, setNaslov] = useState("");
   const [opis, setOpis] = useState("");
@@ -106,10 +107,10 @@ const TutorPocetna = () => {
   const inputNaslov = (event) => setNaslov(event.target.value);
   const inputOpis = (event) => setOpis(event.target.value);
 
-  const kategorijeRef = collection(db, "kategorije");
+  /*const kategorijeRef = collection(db, "kategorije");
   const lokacijeRef = collection(db, "lokacija");
   const uslugeRef = collection(db, "usluge");
-  const oceneRef = collection(db, "ocene");
+  const oceneRef = collection(db, "ocene");*/
 
   const [expanded, setExpanded] = useState(false);
   const [open, setOpen] = useState(false);
@@ -178,7 +179,7 @@ const TutorPocetna = () => {
       us.push(doc.data());
       usID.push(doc.id);
     });*/
-    fetch(api + `class/classes/` + 1, {
+    fetch(api + `class/classes/` + user.id, {
       //OVDE TREBA ID USER-A
       method: "GET",
       withCredentials: true,
@@ -195,6 +196,8 @@ const TutorPocetna = () => {
     setUslugeID(usID);
   };
   useEffect(() => {
+    const obj = JSON.parse(userLogged);
+    setUser(obj);
     const getGradovi = async () => {
       fetch(api + `location`, {
         method: "GET",
@@ -246,7 +249,7 @@ const TutorPocetna = () => {
           new: false,
           locationId: grad.id,
           categoryId: oblast.id,
-          userId: 1, //izmeni
+          userId: user.id, //izmeni
         };
         await fetch(api + `class/addClass`, {
           withCredentials: true,
@@ -288,7 +291,7 @@ const TutorPocetna = () => {
           new: false,
           locationId: grad.id,
           categoryId: oblast.id,
-          userId: 1, //izmeni
+          userId: user.id, //izmeni
         };
         await fetch(api + `class/updateClass/` + IDzamene, {
           withCredentials: true,
@@ -312,7 +315,6 @@ const TutorPocetna = () => {
     await ucitajUsluge();
     setPadajuci(true);
     fetch(api + `class/singleClass/` + idUsluge, {
-      //OVDE TREBA ID USER-A
       method: "GET",
       withCredentials: true,
     })
@@ -374,7 +376,6 @@ const TutorPocetna = () => {
   async function prijaviOcenu(id) {
     if (id != undefined) {
       fetch(api + "grade/updateFlagged/" + id, {
-        //OVDE TREBA ID USER-A
         method: "PUT",
         withCredentials: true,
       }).then((response) => {
@@ -434,7 +435,6 @@ const TutorPocetna = () => {
     }
     if (id != undefined) {
       await fetch(api + `grade/updateNew/` + id, {
-        //OVDE TREBA ID USER-A
         method: "PUT",
         withCredentials: true,
       }).then((response) => {
@@ -566,7 +566,7 @@ const TutorPocetna = () => {
                   }}
                 >
                   <Typography component="h1" variant="h4">
-                    Zdravo {auth.currentUser.displayName},
+                    Zdravo {user.name+" "+user.surname},
                   </Typography>
                   <Typography component="h1" variant="h5">
                     Dobro došli na ITutor!

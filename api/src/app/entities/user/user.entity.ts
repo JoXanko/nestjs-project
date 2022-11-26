@@ -29,10 +29,10 @@ export class User {
   password: string;
 
   @Index()
-  @Column()
+  @Column({ default: '' })
   name: string;
 
-  @Column()
+  @Column({ default: '' })
   surname: string;
 
   @Column({ default: '' })

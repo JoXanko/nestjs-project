@@ -6,31 +6,57 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  ClassSerializerInterceptor,
+  UseInterceptors,
+  Inject,
+  UsePipes,
+  ValidationPipe,
+  Patch,
+  Delete,
+  UseGuards,
+  Put,
 } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { UserDto } from 'src/app/entities/user/dto/user.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { User } from 'src/app/entities/user/user.entity';
+import { CreateUserDto } from 'src/app/entities/user/dto/create-user.dto';
+import { UpdateUserDto } from 'src/app/entities/user/dto/update-user.dto';
 
 @ApiTags('User')
 @Controller('user')
+@UseInterceptors(ClassSerializerInterceptor)
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(
+    @Inject(UserService.name) private readonly userService: UserService,
+  ) {}
+  @Post()
+  @UsePipes(ValidationPipe)
+  create(@Body() createUserDto: CreateUserDto) {
+    return this.userService.create(createUserDto);
+  }
+
   @Get()
-  public getUsers() {
-    return this.userService.getAll();
+  findAll() {
+    return this.userService.findAll();
   }
 
   @Get(':id')
-  public getUser(@Param('id', ParseIntPipe) id: number) {
-    return this.userService.getById(id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.userService.getAbout(id);
   }
 
-  @Post()
-  public addUser(@Body() dto: UserDto) {
-    return this.userService.create(dto);
+  @Patch(':id')
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    return this.userService.update(id, updateUserDto);
   }
 
-  /*@Delete(":id")//ZA ADMINA????
-    public deleteG(@Param("id", ParseIntPipe) id: number) {
-      return this.userService.delete(id);
-    }*/
+  @Delete(':id')
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.userService.remove(id);
+  }
 }

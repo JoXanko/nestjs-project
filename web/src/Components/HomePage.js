@@ -20,7 +20,8 @@ import Futer from '../elements/Footer';
 
 
 const HomePage = () => {
-
+  let userLogged = localStorage.getItem("user");
+  const [user, setUser] = useState({});
     const auth = getAuth(app);
     const [isTutor,setIsTutor] = useState(false);
     const [isUcenik,setIsUcenik] = useState(false);
@@ -28,8 +29,9 @@ const HomePage = () => {
     const db = getFirestore(app);
 
     useEffect(()  => {
-
-      const func = async () => {
+      const obj=JSON.parse(userLogged)
+      setUser(obj);
+      /*const func = async () => {
 
         const uRef = collection(db, 'ucenici');
         const uQuery = query(uRef, where("userID" , "==", auth.currentUser.uid));
@@ -53,17 +55,17 @@ const HomePage = () => {
       }
       onAuthStateChanged(auth,(user)=>{
         func();
-      });
+      });*/
     },[]);
 
   return (
     <div style={{display:'flex',flexDirection:'column',justifyContent:'space-between', height:"100%", minHeight:'100vh'}}>
-      {setup ? <Navigate to="/setupProfile"/> : null}
+      {user.role==="undefined" ? <Navigate to="/setupProfile"/> : null}
         
         <CssBaseline />
         <ResponsiveAppBar user={auth.currentUser}/>
-      {isTutor ? <TutorPocetna /> : null}
-      {isUcenik ? <UserPocetna /> : null}
+      {user.role==="tutor" ? <TutorPocetna /> : null}
+      {user.role==="student" ? <UserPocetna /> : null}
     <Futer />
     </div>
   );

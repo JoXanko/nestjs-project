@@ -10,10 +10,6 @@ export class CreateUserDto {
   @MinLength(8)
   password: string;
 
-  /* @IsNotEmpty()
-  @MinLength(3)
-  name: string;
-
-  @IsNotEmpty()
+  /*@IsNotEmpty()
   role: Type;*/
 }

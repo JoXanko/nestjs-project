@@ -22,7 +22,7 @@ export class GradeController {
     return this.gradeService.getAll();
   }*/
 
-  @Get(':id')
+  @Get('/signleGrade/:id')
   public getGrade(@Param('id', ParseIntPipe) id: number) {
     return this.gradeService.getById(id);
   }
@@ -30,6 +30,11 @@ export class GradeController {
   @Get('averageGrade/:id')
   public getAverage(@Param('id', ParseIntPipe) id: number) {
     return this.gradeService.getAverageGrade(id);
+  }
+
+  @Get('getFlagged')
+  public getFlagged() {
+    return this.gradeService.getFlaggedGrades();
   }
 
   @Get('userGrade/:idClass/:idUser')
@@ -47,13 +52,18 @@ export class GradeController {
     return this.gradeService.updateFlagged(id);
   }
 
+  @Put('updateFlaggedOK/:id')
+  public updateFlaggedOk(@Param('id', ParseIntPipe) id: number) {
+    return this.gradeService.updateFlaggedOK(id);
+  }
+
   @Put('updateNew/:id')
   public updateNew(@Param('id', ParseIntPipe) id: number) {
     return this.gradeService.updateNew(id);
   }
 
-  @Delete(':id') //ZA ADMINA????
-  public deleteG(@Param('id', ParseIntPipe) id: number) {
+  @Delete('deleteGrade/:id') 
+  public deleteGrade(@Param('id', ParseIntPipe) id: number) {
     return this.gradeService.delete(id);
   }
 }

@@ -7,10 +7,11 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Delete,
 } from '@nestjs/common';
 import { GradeDto } from 'src/app/entities/grade/dto/grade.dto';
 import { CategoryDto } from 'src/app/entities/caregory/dto/category.dto';
-import {ApiTags} from '@nestjs/swagger'
+import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Category')
 @Controller('category')
@@ -31,8 +32,11 @@ export class CategoryController {
     return this.categoryService.create(dto);
   }
 
-  /*@Delete(":id")//ZA ADMINA????
-    public deleteG(@Param("id", ParseIntPipe) id: number) {
-      return this.categoryService.delete(id);
-    }*/
+  @Delete(':name/:levelName')
+  public deleteG(
+    @Param('name') name: string,
+    @Param('levelName', ParseIntPipe) levelName: number,
+  ) {
+    return this.categoryService.delete(name, levelName);
+  }
 }

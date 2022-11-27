@@ -428,7 +428,7 @@ const TutorPocetna = () => {
   async function prikaziOcene(id) {
     ucitajUsluge();
     if (id != undefined) {
-      await fetch(api + `grade/` + id)
+      await fetch(api + `grade/signleGrade/` + id)
         .then((response) => {
           return response.json();
         })

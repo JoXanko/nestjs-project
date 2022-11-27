@@ -7,6 +7,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Delete,
 } from '@nestjs/common';
 import { LocationDto } from 'src/app/entities/location/dto/location.dto';
 import { Location } from 'src/app/entities/location/location.entity';
@@ -31,8 +32,8 @@ export class LocationController {
     return this.locationService.create(dto);
   }
 
-  /*@Delete(":id")//ZA ADMINA????
+  @Delete(":id")
     public deleteG(@Param("id", ParseIntPipe) id: number) {
       return this.locationService.delete(id);
-    }*/
+    }
 }

@@ -38,6 +38,12 @@ export class GradeService {
     return Number(sum / count);
   }
 
+  public async getFlaggedGrades() {
+    return this.gradeRepository.find({
+      relations: { student: true, class: true },
+      where: { flagged: true },
+    });
+  }
   public async didUserGraded(classId: number, userId: number) {
     const grade = await this.gradeRepository.findOne({
       relations: { class: true, student: true },
@@ -96,7 +102,15 @@ export class GradeService {
     const gradeToUpdate = await this.gradeRepository.findOneBy({
       id: GradeId,
     });
-    gradeToUpdate.flagged = !gradeToUpdate.flagged;
+    gradeToUpdate.flagged = true;
+    return await this.gradeRepository.save(gradeToUpdate);
+  }
+
+  public async updateFlaggedOK(GradeId: number) {
+    const gradeToUpdate = await this.gradeRepository.findOneBy({
+      id: GradeId,
+    });
+    gradeToUpdate.flagged = false;
     return await this.gradeRepository.save(gradeToUpdate);
   }
 

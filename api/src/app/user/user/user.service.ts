@@ -6,6 +6,7 @@ import { UserDto } from 'src/app/entities/user/dto/user.dto';
 import { CreateUserDto } from 'src/app/entities/user/dto/create-user.dto';
 import { hashPassword } from 'src/app/bcrypt/bcrypt';
 import { UpdateUserDto } from 'src/app/entities/user/dto/update-user.dto';
+import { Type } from 'src/app/entities/user/type';
 
 @Injectable()
 export class UserService {
@@ -29,6 +30,24 @@ export class UserService {
 
   async findAll() {
     return await this.userRepository.find();
+  }
+
+  async findAllStudents() {
+    return await this.userRepository.find({ where: { role: Type.Student } });
+  }
+
+  async findAllTutors() {
+    return await this.userRepository.find({ where: { role: Type.Tutor } });
+  }
+
+  async findUsersByRole() {
+    const usersByRole = { tutors: 0, students: 0 };
+    const users = await this.userRepository.find();
+    users.forEach((user) => {
+      if (user.role == 'student') usersByRole.students++;
+      if (user.role == 'tutor') usersByRole.tutors++;
+    });
+    return usersByRole;
   }
 
   async findOne(id: number) {

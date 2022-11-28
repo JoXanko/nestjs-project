@@ -34,8 +34,9 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import { app } from "../App";
-import { useNavigate, Navigate } from "react-router-dom";
+import { useNavigate, Navigate, useLocation } from "react-router-dom";
 import { api } from "../App";
+import useAuth from "../hooks/useAuth";
 
 const ProfileSetup = () => {
   let userLogged = localStorage.getItem("user");
@@ -49,6 +50,9 @@ const ProfileSetup = () => {
   const navigate = useNavigate();
   const inputIme = (event) => setIme(event.target.value);
   const inputPrezime = (event) => setPrezime(event.target.value);
+  const { setAuth } = useAuth();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
 
   const setup = async (event) => {
     let role;
@@ -64,9 +68,9 @@ const ProfileSetup = () => {
       bio: "",
       role: role,
     };
-    console.log(podaci)
+    console.log(podaci);
     const obj = JSON.parse(userLogged);
-    console.log(obj.id)
+    console.log(obj.id);
     await fetch(api + `user/` + obj.id, {
       withCredentials: true,
       method: "PATCH",
@@ -80,10 +84,17 @@ const ProfileSetup = () => {
         return response.json();
       })
       .then((actualData) => {
-        navigate("/");
         //console.log(actualData);
+        setAuth({});
+        let roles = [];
+        roles.push(actualData.role);
+        const user = [];
+        user.push(actualData);
+        setAuth({ user, roles });
+
         localStorage.setItem("user", JSON.stringify(actualData));
         console.log(localStorage.getItem("user"));
+        navigate(from, { replace: true });
       });
     /*let uid = user.uid;
     const dName = ime + ' ' + prezime;
@@ -116,11 +127,15 @@ const ProfileSetup = () => {
     }*/
   };
 
-  const logout = () => {
-    fetch(api + `auth/logout`, {
+  const logout = async () => {
+    await fetch(api + `auth/logout`, {
       method: "GET",
       withCredentials: true,
-    }).then((actualData) => localStorage.removeItem("user"));
+    }).then((actualData) => {
+      setAuth({});
+      localStorage.removeItem("user");
+      navigate("/login");
+    });
   };
 
   useEffect(() => {
@@ -154,6 +169,7 @@ const ProfileSetup = () => {
 
   return (
     <div>
+      {console.log("PROFILESETUP")}
       {console.log(user)}
       {!user ? <Navigate to="/" /> : null}
       <ThemeProvider theme={theme}>

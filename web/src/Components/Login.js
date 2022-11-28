@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
 //--image imports--
 import googleImg from "../assets/google.png";
@@ -20,6 +20,7 @@ import Typography from "@mui/material/Typography";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/ReactToastify.min.css";
 import { api } from "../App";
+import useAuth from "../hooks/useAuth";
 
 //--Firebase imports--
 import {
@@ -32,15 +33,20 @@ import {
 } from "firebase/auth";
 
 import { app } from "../App.js";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const { setAuth } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
   const [loaded, setLoaded] = useState("");
   const auth = getAuth(app);
   const navigate = useNavigate();
+  const data = useMemo(() => Login, []);
+  const location = useLocation();
+
+  const from = location.state?.from?.pathname || "/";
 
   const inputEmail = (event) => {
     setEmail(event.target.value);
@@ -68,15 +74,28 @@ const Login = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(podaci),
-    }).then((response) => {
-      console.log('logged in');
-      return response.json();
-    }).then((actualData)=>{
-      navigate("/");      
-      //console.log(actualData);
-      localStorage.setItem("user", JSON.stringify(actualData));
-      console.log(localStorage.getItem("user"))
     })
+      .then((response) => {
+        if (response.statusText == "Unauthorized")
+          toast.error("Neispravni podaci za nalog!");
+        return response.json();
+      })
+      .then((actualData) => {
+        console.log(actualData);
+        let roles = [];
+        roles.push(actualData.role);
+        const user = [];
+        user.push(actualData);
+        setAuth({ user, roles });
+        localStorage.setItem("user", JSON.stringify(actualData));
+        if (actualData.role === "undefined")
+          navigate("/setupProfile", { replace: true });
+        else if (actualData.role === "student" || actualData.role === "tutor")
+          navigate(from, { replace: true });
+        /*if (actualData.id != null) {
+          console.log("U IF")
+        } else navigate("/login");*/
+      });
 
     //localStorage.setItem("user", JSON.stringify(podaci));
 

@@ -35,6 +35,7 @@ import {
 import { getFirestore, collection, addDoc } from "firebase/firestore";
 import { app } from "../App";
 import { useNavigate } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 
 const SignUp = () => {
   const db = getFirestore(app);
@@ -43,6 +44,7 @@ const SignUp = () => {
   const [sign, setSignUp] = useState(false);
 
   const auth = getAuth(app);
+  const { setAuth } = useAuth();
   const navigate = useNavigate();
 
   const inputEmail = (event) => setEmail(event.target.value);
@@ -60,11 +62,19 @@ const SignUp = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(podaci),
-    }).then((response) => {
-      return response.json();
-    }).then(()=>{
-      navigate("/");
     })
+      .then((response) => {
+        return response.json();
+      })
+      .then((actualData) => {
+        //console.log(actualData)
+        console.log(actualData);
+        let roles=[];
+        roles.push("undefined");
+        setAuth({ roles });
+        localStorage.setItem("user", JSON.stringify(actualData));
+        navigate("/setupProfile", { replace: true });
+      });
     /*    createUserWithEmailAndPassword(auth, email, password)
       .then(userData => {
         navigate("/");
@@ -79,6 +89,7 @@ const SignUp = () => {
       justifyContent="center"
       sx={{ height: "100vh" }}
     >
+            {console.log("SIGNUP")}
       <CssBaseline />
 
       <Grid

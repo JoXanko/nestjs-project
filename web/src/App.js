@@ -34,7 +34,14 @@ import { getFirestore } from "firebase/firestore";
 import { ThemeProvider } from "@emotion/react";
 import { theme } from "./Components/Theme";
 import { ConstructionTwoTone } from "@mui/icons-material";
-
+import Layout from "./Components/Layout";
+import RequireAuth from "./Components/RequireAuth";
+const ROLES = {
+  Student: "student",
+  Tutor: "tutor",
+  Undefined: "undefined",
+  Admin: "admin",
+};
 const firebaseConfig = {
   apiKey: "AIzaSyBDq64OrKNq6FFJtXDH4OmyDm3lNlZeDuM",
   authDomain: "nestjs-project-rwa.firebaseapp.com",
@@ -42,7 +49,7 @@ const firebaseConfig = {
   storageBucket: "nestjs-project-rwa.appspot.com",
   messagingSenderId: "459939812693",
   appId: "1:459939812693:web:ff2ff0eeaa7f23ffed8bdc",
-  measurementId: "G-066LSSZJBH"
+  measurementId: "G-066LSSZJBH",
 };
 //--Firebase configuration--
 /*const firebaseConfig = {
@@ -63,15 +70,36 @@ const App = () => {
   let userLogged = localStorage.getItem("user");
   const [user, setUser] = useState({});
 
-  useEffect(() => {
-    const obj=JSON.parse(userLogged)
-    setUser(obj);
-    //console.log(user)
-  }, []);
 
   return (
     <ThemeProvider theme={theme}>
-      {console.log(user)}
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          {/* public routes */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+
+          {/* we want to protect these routes */}
+          <Route element={<RequireAuth allowedRoles={[ROLES.Student,ROLES.Tutor]} />}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/chat" element={<Chat />} />
+            <Route path="/profile" element={<Profile />} />
+          </Route>
+
+          <Route element={<RequireAuth allowedRoles={[ROLES.Student]} />}>
+            <Route path="/userPretraga" element={<UserPretraga />} />
+            <Route path="/tutorProfil/:id" element={<TutorProfil />} />
+          </Route>
+
+          <Route element={<RequireAuth allowedRoles={[ROLES.Undefined]} />}>
+            <Route path="/setupProfile" element={<ProfileSetup />} />
+          </Route>
+
+          {/* catch all */}
+          <Route path="*" element={<NotFound />} />
+        </Route>
+      </Routes>
+      {/*{console.log(user)}
       <Router>
         <Routes>
           <Route path="*" element={<NotFound />} />
@@ -99,13 +127,15 @@ const App = () => {
             path="/tutorProfil/:id"
             element={user ? <TutorProfil /> : <Navigate to="/login" />}
           ></Route>
-          <Route
-            path="/setupProfile"
-            element={user ? <ProfileSetup /> : <Navigate to="/login" />}
-          ></Route>
-          <Route path="/ocene" element={<Ocene />}></Route>
-        </Routes>
-      </Router>
+          {user ? (
+            <Route
+              path="/setupProfile"
+              element={user.role==="undefined" ? <ProfileSetup /> : <Navigate to="/login" />}
+            ></Route>
+          ) : null}
+          {/*<Route path="/ocene" element={<Ocene />}></Route>*/}
+      {/*} </Routes>
+      </Router>*/}
     </ThemeProvider>
   );
 };

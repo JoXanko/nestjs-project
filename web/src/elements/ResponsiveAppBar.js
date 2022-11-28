@@ -23,6 +23,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MailIcon from "@mui/icons-material/Mail";
 import GradeIcon from "@mui/icons-material/Grade";
+import { ColorButton } from "../Components/Theme";
 
 //--firebase imports--
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
@@ -38,8 +39,10 @@ import {
   where,
 } from "firebase/firestore";
 import { api } from "../App";
+import useAuth from "../hooks/useAuth";
 
 const ResponsiveAppBar = (props) => {
+  const { setAuth } = useAuth();
   let userLogged = localStorage.getItem("user");
   const [user, setUser] = useState({});
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -85,11 +88,14 @@ const ResponsiveAppBar = (props) => {
       method: "GET",
       withCredentials: true,
     }).then((actualData) => {
-      navigate("/login");
       localStorage.removeItem("user");
+      setAuth({});
+      navigate("/login");
     });
   };
-
+  const navigateHome = () => {
+    navigate("/");
+  };
   return (
     <AppBar position="relative">
       <Container maxWidth="xl">
@@ -107,9 +113,14 @@ const ResponsiveAppBar = (props) => {
             justifyContent="center"
             alignItems="center"
           >
-            <Link href="/">
+            <ColorButton
+              size="large"
+              color="inherit"
+              onClick={navigateHome}
+              mr="2"
+            >
               <img src={logo4} height="40" cs={{ mr: 2 }} />
-            </Link>
+            </ColorButton>
           </Box>
           <Box sx={{ display: { xs: "flex" } }}>
             <IconButton
@@ -152,7 +163,6 @@ const ResponsiveAppBar = (props) => {
                   </ListItemIcon>
                   <Typography textAlign="center">Profil</Typography>
                 </MenuItem>
-                {isTutor ? <></> : <></>}
                 <MenuItem onClick={handleOdjava}>
                   <ListItemIcon>
                     <LogoutIcon fontSize="medium" />

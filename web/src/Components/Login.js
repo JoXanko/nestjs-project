@@ -22,28 +22,13 @@ import "react-toastify/ReactToastify.min.css";
 import { api } from "../App";
 import useAuth from "../hooks/useAuth";
 
-//--Firebase imports--
-import {
-  signInWithEmailAndPassword,
-  getAuth,
-  GoogleAuthProvider,
-  signInWithPopup,
-  setPersistence,
-  browserLocalPersistence,
-} from "firebase/auth";
-
-import { app } from "../App.js";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const { setAuth } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({});
-  const [loaded, setLoaded] = useState("");
-  const auth = getAuth(app);
   const navigate = useNavigate();
-  const data = useMemo(() => Login, []);
   const location = useLocation();
 
   const from = location.state?.from?.pathname || "/";
@@ -53,16 +38,7 @@ const Login = () => {
   };
   const inputPassword = (event) => setPassword(event.target.value);
 
-  const signInWithGoogle = () => {
-    const provider = new GoogleAuthProvider();
-
-    signInWithPopup(auth, provider).then((userCredentail) => {
-      navigate("/");
-    });
-  };
-
   const handleSubmit = async (event) => {
-    //event.preventDefault();
     const podaci = {
       username: email,
       password: password,
@@ -92,32 +68,7 @@ const Login = () => {
           navigate("/setupProfile", { replace: true });
         else if (actualData.role === "student" || actualData.role === "tutor")
           navigate(from, { replace: true });
-        /*if (actualData.id != null) {
-          console.log("U IF")
-        } else navigate("/login");*/
       });
-
-    //localStorage.setItem("user", JSON.stringify(podaci));
-
-    /*setPersistence(auth, browserLocalPersistence).then(() => {
-      return signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          navigate("/");
-        }).catch((e) => {
-          if (e.code == 'auth/invalid-email') {
-            toast.error("Unesite validan email!");
-          } else if (e.code == 'auth/internal-error') {
-            toast.error("Unesite lozinku!");
-          } else if (e.code == 'auth/user-not-found') {
-            toast.error("Ne postoji nalog!");
-          } else if (e.code == 'auth/wrong-password') {
-            toast.error("Neispravna lozinka!");
-          } else if (e.code == 'auth/too-many-requests') {
-            toast.error("Pokušajte ponovo!");
-          }
-
-        });
-    });*/
   };
 
   return (
@@ -159,7 +110,6 @@ const Login = () => {
           <Box className="glavniBox" component="form" noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
-              helperText={errors.email}
               required
               onChange={inputEmail}
               onKeyPress={(e) => {
@@ -214,7 +164,7 @@ const Login = () => {
               </Grid>
             </Box>
 
-            <ColorButton
+            {/*<ColorButton
               variant="contained"
               fullWidth
               color="primary"
@@ -228,7 +178,7 @@ const Login = () => {
               <span>
                 <span>Prijavite se preko Google-a</span>
               </span>
-            </ColorButton>
+            </ColorButton>*/}
           </Box>
         </Grid>
       </Grid>

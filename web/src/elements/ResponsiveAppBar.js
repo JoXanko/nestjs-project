@@ -6,7 +6,6 @@ import logo4 from "../assets/logo4.png";
 
 //--Material UI imports--
 import AppBar from "@mui/material/AppBar";
-import { Link } from "@mui/material";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
@@ -19,25 +18,14 @@ import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import PersonIcon from "@mui/icons-material/Person";
-import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MailIcon from "@mui/icons-material/Mail";
-import GradeIcon from "@mui/icons-material/Grade";
 import { ColorButton } from "../Components/Theme";
 
 //--firebase imports--
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 
 import { app } from "../App.js";
-import Profile from "../Components/Profile";
-import UserPocetna from "../Components/UserPocetna";
-import {
-  collection,
-  getDocs,
-  getFirestore,
-  query,
-  where,
-} from "firebase/firestore";
 import { api } from "../App";
 import useAuth from "../hooks/useAuth";
 
@@ -47,8 +35,6 @@ const ResponsiveAppBar = (props) => {
   const [user, setUser] = useState({});
   const [anchorElUser, setAnchorElUser] = useState(null);
   const navigate = useNavigate();
-  const auth = getAuth(app);
-  const [isTutor, setIsTutor] = useState(false);
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -56,19 +42,7 @@ const ResponsiveAppBar = (props) => {
   useEffect(() => {
     const obj = JSON.parse(userLogged);
     setUser(obj);
-    //console.log(user)
   }, []);
-  /*const func = async () => {
-    const db = getFirestore(app);
-    const uRef = collection(db, "ucenici");
-    const uQuery = query(uRef, where("userID", "==", props.user?.uid));
-    const uQuerySnapshot = await getDocs(uQuery);
-
-    if (uQuerySnapshot.empty == false) {
-      setIsTutor(false);
-    } else setIsTutor(true);
-  };
-  func();*/
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
@@ -83,7 +57,6 @@ const ResponsiveAppBar = (props) => {
   };
 
   const handleOdjava = () => {
-    //signOut(auth)
     fetch(api + `auth/logout`, {
       method: "GET",
       withCredentials: true,

@@ -3,25 +3,12 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { api } from "./App";
-
-import {
-  getDocs,
-  getFirestore,
-  collection,
-  query,
-  where,
-} from "firebase/firestore";
-import { app } from "./App";
 
 function Copyright(props) {
   return (
@@ -41,8 +28,6 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignIn(props) {
-  const db = getFirestore(app);
-
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -66,24 +51,11 @@ export default function SignIn(props) {
         return response.json();
       })
       .then((actualData) => {
-        //navigate("/");
-        //console.log(actualData);
         localStorage.setItem("user", JSON.stringify(actualData));
         console.log(localStorage.getItem("user"));
 
         props.tokenCb(actualData["token"]);
       });
-    /*fetch("https://api.hashify.net/hash/sha256/hex?value=" + data.get('password'))
-    .then(res => res.json())
-    .then(res => password = res.Digest)
-    .then(()=>{
-      getDocs(query(collection(db,"admini"),where("username","==",username),where("password","==",password)))
-      .then((val) =>{
-        val.docs.forEach((el)=>{
-          props.tokenCb(el.data()['token']);
-        });
-      })
-    });*/
   };
 
   return (

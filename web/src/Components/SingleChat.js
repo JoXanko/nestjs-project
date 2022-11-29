@@ -1,23 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
-import PropTypes from "prop-types";
-import { getAuth } from "firebase/auth";
-import {
-  getFirestore,
-  collection,
-  onSnapshot,
-  query,
-  orderBy,
-  addDoc,
-  Timestamp,
-  doc,
-  getDoc,
-  updateDoc,
-} from "firebase/firestore";
 
 import { api } from "../App.js";
 import { app } from "../App";
-import Grid from "@mui/material/Grid";
-import { Button, TextField, Paper } from "@mui/material";
+import { TextField } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { ChipCopy } from "./Theme";
 import { Avatar } from "@mui/material";
@@ -29,8 +14,6 @@ const SingleChat = (props) => {
   const skrol = useRef();
   let userLogged = localStorage.getItem("user");
   const user = JSON.parse(userLogged);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
   const [messages, setMessages] = useState([]);
   const [novaPoruka, setNovaPoruka] = useState("");
 
@@ -38,7 +21,7 @@ const SingleChat = (props) => {
     let podaci = {
       text: novaPoruka,
       date: Date.now(),
-      senderId: user.id, //TREBA TRENUTNI PRIJAVLJENI ID
+      senderId: user.id,
       chatId: props.sagovornik.id,
     };
     console.log(podaci);
@@ -55,18 +38,6 @@ const SingleChat = (props) => {
     });
     ucitajPoruke();
     skrol.current.scrollIntoView({ behavior: "smooth" });
-    /*
-        if (novaPoruka !== '') {
-            await addDoc(collection(db, "konverzacije/" + props.sagovornik.idKonvo + "/poruke"), {
-                datumVreme: Timestamp.now(),
-                od: auth.currentUser.uid,
-                poruka: novaPoruka,
-                svidjano: false
-            });
-            setNovaPoruka('');
-        }
-
-        skrol.current.scrollIntoView({ behavior: 'smooth' });*/
   };
 
   useEffect(() => {
@@ -86,18 +57,6 @@ const SingleChat = (props) => {
 
       ucitajPoruke();
     }, 1000);
-    //console.log(messages); //MEESAGE NIJE MAP..?
-    /*const porukeRef = query(
-      collection(db, "konverzacije/" + props.sagovornik.idKonvo + "/poruke"),
-      orderBy("datumVreme", "asc")
-    );
-    const unsubscribe = onSnapshot(porukeRef, (querySnapshot) => {
-      const poruke = [];
-      querySnapshot.forEach((doc) => {
-        poruke.push(doc.data());
-      });
-      setMessages(poruke);
-    });*/
 
     return () => clearInterval(interval);
   }, [props.sagovornik]);
@@ -122,8 +81,7 @@ const SingleChat = (props) => {
           height: "8%",
         }}
       >
-        {props.sagovornik.student.id ===
-        user.id /*TREBA PRAVI ID PRIJAVLJENOG OVDE!!!!!!!!!!!!!!*/ ? (
+        {props.sagovornik.student.id === user.id ? (
           <Avatar
             src={props.sagovornik.tutor.imageUrl}
             style={{ marginRight: "1rem" }}
@@ -135,8 +93,7 @@ const SingleChat = (props) => {
           ></Avatar>
         )}
         <Typography variant="h4">
-          {props.sagovornik.student.id ===
-          user.id /*TREBA PRAVI ID PRIJAVLJENOG OVDE!!!!!!!!!!!!!!*/
+          {props.sagovornik.student.id === user.id
             ? props.sagovornik.tutor.name + " " + props.sagovornik.tutor.surname
             : props.sagovornik.student.name +
               " " +
@@ -149,7 +106,6 @@ const SingleChat = (props) => {
           const date = new Date(Number(message.date));
           const humanDateFormat = date.toLocaleTimeString();
           if (message.senderId === user.id) {
-            //TREBA ID PRIJAVLJENOG!
             return (
               <div style={{ display: "flex", flexDirection: "row-reverse" }}>
                 <Box>
@@ -167,7 +123,7 @@ const SingleChat = (props) => {
               <div>
                 <Box>
                   {props.sagovornik.student.id === user.id ? (
-                    /*TREBA PRAVI ID PRIJAVLJENOG OVDE!!!!!!!!!!!!!!*/ <ChipCopy
+                    <ChipCopy
                       foto={props.sagovornik.tutor.imageUrl}
                       vreme={humanDateFormat}
                       poruka={message.text}

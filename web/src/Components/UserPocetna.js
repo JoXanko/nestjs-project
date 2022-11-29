@@ -1,6 +1,6 @@
 import { React, useState, useEffect } from "react";
 
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import studying from "../assets/studying.jpg";
 import prirodne from "../assets/prirodne.jpg";
@@ -8,26 +8,15 @@ import jezici from "../assets/jezici.jpg";
 import drustvene from "../assets/drustvene.png";
 
 //--Material UI imports--
-import Button from "@mui/material/Button";
-import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import { Card, CardContent, CardMedia, CardActionArea } from "@mui/material";
-import Chip from "@mui/material/Chip";
-import { FormControlLabel, Radio } from "@mui/material";
+
+import { Card, CardContent, CardMedia } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 
 //--firebase imports--
-import { getAuth, signOut } from "firebase/auth";
-import { getFirestore, collection, getDocs, query } from "firebase/firestore";
-
-import { app } from "../App.js";
 import { ColorButton } from "./Theme";
 
 const current = new Date();
@@ -64,7 +53,6 @@ const UserPocetna = () => {
   let userLogged = localStorage.getItem("user");
   const [user, setUser] = useState({});
   const navigate = useNavigate();
-  //const auth = getAuth(app);
 
   const klikPretraga = () => {
     navigate("/userPretraga");
@@ -72,7 +60,6 @@ const UserPocetna = () => {
   useEffect(() => {
     const obj = JSON.parse(userLogged);
     setUser(obj);
-    //console.log(user)
   }, []);
 
   return (

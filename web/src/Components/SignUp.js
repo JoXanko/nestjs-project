@@ -1,9 +1,6 @@
 import React, { useState } from "react";
 
 //--PNG imports--
-import googleImg from "../assets/google.png";
-import studentImg from "../assets/student.png";
-import teacherImg from "../assets/teacher.png";
 import logo2 from "../assets/logo2";
 
 //--CSS import--
@@ -11,39 +8,21 @@ import "../css/SignUp.css";
 import { ColorButton } from "./Theme";
 
 //--Material UI imports--
-import Radio from "@mui/material/Radio";
-import Avatar from "@mui/material/Avatar";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import { ThemeProvider } from "@mui/material/styles";
 import { api } from "../App";
 
-//--Firebase imports--
-import {
-  createUserWithEmailAndPassword,
-  getAuth,
-  GoogleAuthProvider,
-  signInWithPopup,
-} from "firebase/auth";
-
-import { getFirestore, collection, addDoc } from "firebase/firestore";
-import { app } from "../App";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 
 const SignUp = () => {
-  const db = getFirestore(app);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [sign, setSignUp] = useState(false);
-
-  const auth = getAuth(app);
   const { setAuth } = useAuth();
   const navigate = useNavigate();
 
@@ -67,18 +46,13 @@ const SignUp = () => {
         return response.json();
       })
       .then((actualData) => {
-        //console.log(actualData)
         console.log(actualData);
-        let roles=[];
+        let roles = [];
         roles.push("undefined");
         setAuth({ roles });
         localStorage.setItem("user", JSON.stringify(actualData));
         navigate("/setupProfile", { replace: true });
       });
-    /*    createUserWithEmailAndPassword(auth, email, password)
-      .then(userData => {
-        navigate("/");
-      }).catch(e => console.log(e));*/
   };
 
   return (
@@ -89,7 +63,7 @@ const SignUp = () => {
       justifyContent="center"
       sx={{ height: "100vh" }}
     >
-            {console.log("SIGNUP")}
+      {console.log("SIGNUP")}
       <CssBaseline />
 
       <Grid

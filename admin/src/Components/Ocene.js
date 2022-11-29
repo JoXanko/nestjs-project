@@ -1,15 +1,4 @@
 import React, { useState, useEffect } from "react";
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  query,
-  where,
-  doc,
-  deleteDoc,
-  updateDoc,
-  getDoc,
-} from "firebase/firestore";
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -20,35 +9,32 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
-import Avatar from "@mui/material/Avatar";
-import { ButtonGroup, Typography, TextField, Box } from "@mui/material";
+import { ButtonGroup, Typography, Box } from "@mui/material";
 import ProfileBadge from "./ProfilBadge";
 import { api } from "../App";
 
-import { app } from "../App";
 
 export default function Ocene() {
   const [ocene, setOcene] = useState([]);
-  const db = getFirestore(app);
 
   const handleOk = async (id) => {
-    //updateDoc(doc(db, "ocene", id), { oznacena: false }).then(() => loadData());
     await fetch(api + `grade/updateFlaggedOK/` + id, {
       method: "PUT",
       withCredentials: true,
     }).then((response) => {
       return response.json();
     });
+    loadData();
   };
 
   const handleObrisi = async (id) => {
-    //deleteDoc(doc(db, "ocene", id)).then(() => loadData());
     await fetch(api + `grade/deleteGrade/` + id, {
       method: "DELETE",
       withCredentials: true,
     }).then((response) => {
       return response.json();
     });
+    loadData();
   };
 
   const loadData = async () => {
@@ -62,16 +48,6 @@ export default function Ocene() {
       .then((actualData) => {
         setOcene(actualData);
       });
-    /*let temp = [];
-    await getDocs(query(collection(db, "ocene"), where("oznacena", "==", true))).then((value) => {
-      value.forEach((el) => {
-        let t = el.data();
-        t['docID'] = el.id;
-        temp.push(t);
-      });
-    }).then(() => {
-      setOcene(temp);
-    });*/
   };
 
   useEffect(() => {
@@ -107,9 +83,9 @@ export default function Ocene() {
                   <TableCell>
                     <ProfileBadge korisnikID={row.student.id} />
                   </TableCell>
-                  <TableCell>
+                  {/*<TableCell>
                     {row.student.name + " " + row.student.surname}
-                  </TableCell>
+                  </TableCell>*/}
                   <TableCell>{row.class.id}</TableCell>
                   <TableCell>{row.comment}</TableCell>
                   <TableCell>{row.grade}</TableCell>

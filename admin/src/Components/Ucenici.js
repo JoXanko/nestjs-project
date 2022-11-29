@@ -1,13 +1,4 @@
 import React, { useState, useEffect } from "react";
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  query,
-  where,
-  doc,
-  deleteDoc,
-} from "firebase/firestore";
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -22,14 +13,11 @@ import Avatar from "@mui/material/Avatar";
 import { ButtonGroup, Typography, TextField, Box } from "@mui/material";
 import { api } from "../App";
 
-import { app } from "../App";
-
 export default function Ucenici() {
   const [ucenici, setUcenici] = useState([]);
   const [filter, setFilter] = useState("");
   const [refresh, setRefresh] = useState(false);
   const [filtrirano, setFiltrirano] = useState([]);
-  const db = getFirestore(app);
 
   const handleFilter = (event) => {
     setFilter(event.target.value);
@@ -43,24 +31,6 @@ export default function Ucenici() {
       return response.json();
     });
     setRefresh(true);
-    /*//brisanje ocena
-    getDocs(query(collection(db,"ocene"),where("korisnikID","==",korisnik.userID))).then((value)=>{
-      value.docs.forEach((el) =>{
-        let t = doc(db,"ocene",el.id);
-        deleteDoc(t);
-      })
-    })
-
-    //brisanje konverzacija
-    getDocs(query(collection(db,"konverzacije"),where("korisnici","array-contains",korisnik.userID))).then((value)=>{
-      value.docs.forEach((el) =>{
-        let t = doc(db,"konverzacije",el.id);
-        deleteDoc(t);
-      })
-    })
-    
-    //brisanje ucenika
-    deleteDoc(doc(db,"ucenici",korisnik.docID));*/
   };
 
   useEffect(() => {
@@ -76,17 +46,6 @@ export default function Ucenici() {
         setFiltrirano(actualData);
       });
     setRefresh(false);
-    /*let temp = [];
-    getDocs(collection(db, "ucenici")).then((value) => {
-      value.forEach((el) => {
-        let t = el.data();
-        t.docID = el.id;
-        temp.push(t);
-      });
-    }).then((el) => {
-      setUcenici(temp);
-      setFiltrirano(temp);
-    });*/
   }, [refresh]);
 
   useEffect(() => {

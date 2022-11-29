@@ -1,11 +1,5 @@
 import { React, useState, useEffect } from "react";
-import {
-  Navigate,
-  useLocation,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import "react-toastify/ReactToastify.min.css";
 
 import slikaUsluga from "../assets/slikaUsluga.jpg";
@@ -21,56 +15,26 @@ import { Card, CardMedia, CardContent, CardActions } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import MailIcon from "@mui/icons-material/Mail";
 import TextField from "@mui/material/TextField";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
-import DialogActions from "@mui/material/DialogActions";
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  query,
-  where,
-  updateDoc,
-  doc,
-  addDoc,
-  Timestamp,
-  getDoc,
-} from "firebase/firestore";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 
 //--firebase imports--
-
-import {
-  getAuth,
-  onAuthStateChanged,
-  signOut,
-  updateProfile,
-} from "firebase/auth";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 
 import { app } from "../App.js";
 import ResponsiveAppBar from "../elements/ResponsiveAppBar";
-import Footer from "../elements/Footer";
-import undf from "../assets/undefined.jpg";
-import { ThemeProvider } from "@emotion/react";
-import { async } from "@firebase/util";
-import { theme, ColorButton, PopupDialog, PopupDialogTitle } from "./Theme";
+import { ColorButton, PopupDialog, PopupDialogTitle } from "./Theme";
 import { Avatar, Rating } from "@mui/material";
 import { api } from "../App";
+import { Timestamp } from "firebase/firestore";
 
 const TutorProfil = (props) => {
   let userLogged = localStorage.getItem("user");
   const user = JSON.parse(userLogged);
   const location = useLocation();
-  console.log(location.state.idUser); //location.state.idUser ID TUTORA!!!!!!!!
+  console.log(location.state.idUser);
   const navigate = useNavigate();
-  let { id } = useParams();
-  console.log("ovo je id " + id);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-  const [tu, setTu] = useState({}); //tu je location.state.idUser
+  /*let { id } = useParams();
+  console.log("ovo je id " + id);*/
   const [izabrani, setIzabrani] = useState({});
   const [usluge, setUsluge] = useState([]);
   const [open, setOpen] = useState(false);
@@ -87,27 +51,8 @@ const TutorProfil = (props) => {
         })
         .then((actualData) => {
           console.log(actualData);
-          navigate("/chat", { state: actualData }); //sa actualData
+          navigate("/chat", { state: actualData });
         });
-      //ako postoji nadji ako ne postoji napravi
-      /*await getDocs(
-        query(
-          collection(db, "konverzacije"),
-          where("korisnici", "array-contains", auth.currentUser.uid)
-        )
-      )
-        .then((val) => {
-          let flag = false;
-          val.docs.forEach((doc) => {
-            if (doc.data().korisnici.includes(tu.userID)) flag = true;
-          });
-          if (flag !== true) {
-            addDoc(collection(db, "konverzacije"), {
-              korisnici: [tu.userID, auth.currentUser.uid],
-            });
-          }
-        })
-        .then(() => navigate("/chat"));*/
     };
     if (user.id !== null) func();
   };
@@ -118,27 +63,16 @@ const TutorProfil = (props) => {
 
     const func = async () => {
       await fetch(
-        api + `grade/userGrade/` + obj.id + "/" + location.state.idUser
+        api + `grade/userGrade/` + obj.id + "/" + user.id
       )
         .then((response) => {
           return response.json();
         })
         .then((actualData) => {
+          console.log(actualData)
           if (actualData != false) setOcenjeno(actualData);
           else setOcenjeno({});
         });
-      /*
-      const ref = query(
-        collection(db, "ocene"),
-        where("uslugaID", "==", obj.idUsluge),
-        where("korisnikID", "==", auth.currentUser.uid)
-      );
-      const snapshot = await getDocs(ref);
-      if (snapshot.size > 0) {
-        setOcenjeno(snapshot.docs[0].data());
-      } else {
-        setOcenjeno({});
-      }*/
     };
 
     func().then(() => setOpen(true));
@@ -174,23 +108,8 @@ const TutorProfil = (props) => {
           getUsluge();
         });
     };
-    /*
-    const azurirajSrednjuOcenu = async () => {
-      const snapshot = doc(db, "usluge", izabrani.idUsluge);
-      let snap = await getDoc(snapshot);
-      let temp = snap.data();
-
-      updateDoc(snapshot, {
-        srednjaOcena:
-          (temp.srednjaOcena * temp.brojOcena + value) / (temp.brojOcena + 1),
-        brojOcena: temp.brojOcena + 1,
-        nova: true,
-      });
-    };
-    */
 
     dodajRating().then(() => {
-      //azurirajSrednjuOcenu();
       setOpen(false);
     });
   };
@@ -202,25 +121,11 @@ const TutorProfil = (props) => {
       .then((actualData) => {
         setUsluge(actualData);
       });
-    /*const niz = [];
-    const q = query(collection(db, "usluge"), where("tutor", "==", id));
-    const snapshot = await getDocs(q);
-    snapshot.docs.forEach((e) => {
-      let obj = e.data();
-      obj["idUsluge"] = e.id;
-      niz.push(obj);
-    });
-    setUsluge(niz);*/
   };
   useEffect(() => {
     let temp = [];
 
-    const getTutora = async () => {
-      /*
-      const q = query(collection(db, "tutori"), where("userID", "==", id));
-      const snapshot = await getDocs(q);
-      snapshot.docs.forEach((e) => setTu(e.data()));*/
-    };
+    const getTutora = async () => {};
     getTutora();
 
     getUsluge();
@@ -233,7 +138,7 @@ const TutorProfil = (props) => {
       justifyContent={"space-between"}
       height={"100%"}
     >
-      <ResponsiveAppBar user={auth.currentUser} />
+      <ResponsiveAppBar user={user} />
       <Grid
         container
         display={"flex"}

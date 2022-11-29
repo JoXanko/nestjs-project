@@ -16,38 +16,18 @@ import SaveIcon from "@mui/icons-material/Save";
 import LockResetOutlinedIcon from "@mui/icons-material/LockResetOutlined";
 
 //--firebase imports--
-import {
-  getAuth,
-  onAuthStateChanged,
-  signOut,
-  updateProfile,
-  sendPasswordResetEmail,
-} from "firebase/auth";
+import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  query,
-  where,
-  updateDoc,
-  doc,
-  getDocsFromCache,
-} from "firebase/firestore";
 import { app } from "../App.js";
 import ResponsiveAppBar from "../elements/ResponsiveAppBar";
 import Futer from "../elements/Footer";
 import undf from "../assets/undefined.jpg";
-import { ThemeProvider } from "@emotion/react";
-import { async } from "@firebase/util";
-import { theme, ColorButton } from "./Theme";
+import { ColorButton } from "./Theme";
 import { Stack } from "react-bootstrap";
-import { Alert, Input, Snackbar } from "@mui/material";
+import { Alert, Snackbar } from "@mui/material";
 import Button from "@mui/material/Button";
-import { CheckBoxOutlineBlankTwoTone } from "@mui/icons-material";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/ReactToastify.min.css";
-import UserPocetna from "./UserPocetna";
 import { api } from "../App";
 
 const Profile = () => {
@@ -55,12 +35,8 @@ const Profile = () => {
   const user = JSON.parse(userLogged);
   const storage = getStorage(app);
   const auth = getAuth(app);
-  const db = getFirestore(app);
-  const [isTutor, setIsTutor] = useState(false);
   const [file, setFile] = useState("");
-  const [slika, setSlika] = useState("");
   const [image, setImage] = useState("");
-  const [imeprezime, setImePrezime] = useState("");
   const [ime, setIme] = useState("");
   const [prezime, setPrezime] = useState("");
   const [bio, setBio] = useState("");
@@ -94,42 +70,8 @@ const Profile = () => {
     setPrezime(user.surname);
     setImage(user.imageUrl);
   }, []);
-  /*useEffect(() => {
-
-        const func = async () => {
-            const tRef = collection(db, 'tutori');
-            const tQuery = query(tRef, where("userID", "==", auth.currentUser.uid));
-            const tQuerySnapshot = await getDocs(tQuery);
-
-            if (tQuerySnapshot.empty == false) {
-                setIsTutor(true);
-                tQuerySnapshot.docs.forEach(e => {
-                    let d = e.data();
-                    setBio(d.bio);
-                });
-            } else {
-                setIsTutor(false);
-            }
-        }
-
-        onAuthStateChanged(auth, () => {
-            setImePrezime(auth.currentUser.displayName);
-            setImage(auth.currentUser.photoURL);
-            func();
-        });
-    }, [auth.currentUser]);*/
 
   const update = async (event) => {
-    /*let tIme = ime;
-    let tPrezime = prezime;
-
-    if (tPrezime === "") {
-      tPrezime = imeprezime.split(" ")[1];
-    }
-
-    if (tIme === "") {
-      tIme = imeprezime.split(" ")[0];
-    }*/
     const podaci = {
       name: ime,
       surname: prezime,
@@ -152,29 +94,6 @@ const Profile = () => {
         localStorage.setItem("user", JSON.stringify(actualData));
         console.log(localStorage.getItem("user"));
       });
-    //updateProfile(auth.currentUser, { displayName: tIme + " " + tPrezime });
-
-    /*if (isTutor === true) {
-      const tRef = collection(db, "tutori");
-      const tQuery = query(tRef, where("userID", "==", auth.currentUser.uid));
-      const tQuerySnapshot = await getDocs(tQuery);
-
-      const tutor = doc(db, "tutori", tQuerySnapshot.docs.at(0).id);
-      const polje = { bio: bio, ime: tIme, prezime: tPrezime };
-      await updateDoc(tutor, polje).then(() => {
-        toast.success("Uspešno ste izmenili profil !");
-      });
-    } else {
-      const tRef = collection(db, "ucenici");
-      const tQuery = query(tRef, where("userID", "==", auth.currentUser.uid));
-      const tQuerySnapshot = await getDocs(tQuery);
-
-      const tutor = doc(db, "ucenici", tQuerySnapshot.docs.at(0).id);
-      const polje = { ime: tIme, prezime: tPrezime };
-      await updateDoc(tutor, polje).then(() => {
-        toast.success("Uspešno ste izmenili profil !");
-      });
-    }*/
   };
 
   const promeniSliku = async () => {
@@ -183,42 +102,11 @@ const Profile = () => {
     }
 
     const storageRef = ref(storage, `/files/${file.name}`);
-    let globalURl = "";
-
     uploadBytes(storageRef, file).then((snapshot) => {
       getDownloadURL(storageRef).then((url) => {
         setImage(url);
-
-        /*updateProfile(auth.currentUser, { photoURL: url }).then(() => {
-          const tQuery = query(
-            collection(db, "tutori"),
-            where("userID", "==", auth.currentUser.uid)
-          );
-
-          getDocs(tQuery).then((tdocs) => {
-            tdocs.forEach((val) => {
-              let temp = doc(db, "tutori", val.id);
-              updateDoc(temp, { fotografija: url });
-              setImage(url);
-            });
-          });
-
-          const uQuery = query(
-            collection(db, "ucenici"),
-            where("userID", "==", auth.currentUser.uid)
-          );
-
-          getDocs(uQuery).then((udocs) => {
-            udocs.forEach((val) => {
-              let temp = doc(db, "ucenici", val.id);
-              updateDoc(temp, { fotografija: url });
-              setImage(url);
-            });
-          });
-        });*/
       });
     });
-
   };
   const Input = styled("input")({
     display: "none",
@@ -233,7 +121,7 @@ const Profile = () => {
         minHeight: "100vh",
       }}
     >
-      <ResponsiveAppBar user={auth.currentUser} />
+      <ResponsiveAppBar user={user} />
       <Grid
         container
         item

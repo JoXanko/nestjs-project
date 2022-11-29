@@ -1,15 +1,4 @@
 import React, { useState, useEffect } from "react";
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  query,
-  where,
-  doc,
-  deleteDoc,
-  add,
-  addDoc,
-} from "firebase/firestore";
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -20,19 +9,15 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
-import Avatar from "@mui/material/Avatar";
 import {
   ButtonGroup,
   Typography,
   TextField,
-  Box,
   Checkbox,
   FormControlLabel,
 } from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
 import { api } from "../App";
-
-import { app } from "../App";
 
 export default function Kategorije() {
   const [kategorije, setKategorije] = useState([]);
@@ -42,10 +27,7 @@ export default function Kategorije() {
   const [srednja, setSrednja] = useState(false);
   const [faks, setFaks] = useState(false);
 
-  const db = getFirestore(app);
-
   const handleObrisi = async (catName, levelId) => {
-    //deleteDoc(doc(db, "kategorije", id)).then(() => loadData());
     await fetch(api + `category/` + catName + "/" + levelId, {
       method: "DELETE",
       withCredentials: true,
@@ -107,25 +89,9 @@ export default function Kategorije() {
       });
     }
     loadData();
-    /*addDoc(collection(db, "kategorije"), {
-      nazivKategorije: naziv,
-      stepen: stepeni,
-    }).then(() => {
-      loadData();
-    });*/
   };
 
   const loadData = async () => {
-    /*let temp = [];
-        await getDocs(collection(db, "kategorije")).then((value) => {
-            value.forEach((el) => {
-                let t = el.data();
-                t.docID = el.id;
-                temp.push(t);
-            });
-        }).then((el) => {
-            setKategorije(temp);
-        });*/
     fetch(api + `category`, {
       method: "GET",
       withCredentials: true,

@@ -13,11 +13,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import SaveIcon from "@mui/icons-material/Save";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
-import CloseIcon from "@mui/icons-material/Close";
 import ReportGmailerrorredIcon from "@mui/icons-material/ReportGmailerrorred";
 import UploadIcon from "@mui/icons-material/Upload";
 import AddIcon from "@mui/icons-material/Add";
-import { ConstructionOutlined, PhotoCamera } from "@mui/icons-material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import Alert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
@@ -27,25 +25,10 @@ import AutoAwesomeOutlinedIcon from "@mui/icons-material/AutoAwesomeOutlined";
 import { api } from "../App";
 
 //--firebase imports--
-import { getAuth, signOut, updateProfile } from "firebase/auth";
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  query,
-  where,
-  addDoc,
-  deleteDoc,
-  doc,
-  updateDoc,
-  getDoc,
-} from "firebase/firestore";
 import { app } from "../App.js";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 
 import { ColorButton, PopupDialog, PopupDialogTitle } from "./Theme.js";
-import Footer from "../elements/Footer";
-import undf from "../assets/undefined.jpg";
 import {
   Accordion,
   AccordionDetails,
@@ -58,8 +41,6 @@ import {
   Fade,
   FormControl,
   FormControlLabel,
-  IconButton,
-  Input,
   InputLabel,
   MenuItem,
   Radio,
@@ -69,7 +50,6 @@ import {
   TextField,
   Tooltip,
 } from "@mui/material";
-import { Badge } from "react-bootstrap";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -82,11 +62,8 @@ const MenuProps = {
   },
 };
 const TutorPocetna = () => {
-  /*const auth = getAuth(app);
-  const db = getFirestore(app);*/
   let userLogged = localStorage.getItem("user");
   const user = JSON.parse(userLogged);
-  //const [show, setShow] = useState(false);
   const [naslov, setNaslov] = useState("");
   const [opis, setOpis] = useState("");
   const [usluge, setUsluge] = useState([]);
@@ -106,12 +83,6 @@ const TutorPocetna = () => {
 
   const inputNaslov = (event) => setNaslov(event.target.value);
   const inputOpis = (event) => setOpis(event.target.value);
-
-  /*const kategorijeRef = collection(db, "kategorije");
-  const lokacijeRef = collection(db, "lokacija");
-  const uslugeRef = collection(db, "usluge");
-  const oceneRef = collection(db, "ocene");*/
-
   const [expanded, setExpanded] = useState(false);
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
@@ -170,18 +141,7 @@ const TutorPocetna = () => {
   };
 
   const ucitajUsluge = async () => {
-    /*const us = [];
-    const usID = [];
-    const q = query(uslugeRef, where("tutor", "==", auth.currentUser.uid));
-    const snapshot = await getDocs(q);
-
-    snapshot.forEach((doc) => {
-      us.push(doc.data());
-      usID.push(doc.id);
-    });*/
-    console.log(user.id);
     fetch(api + `class/classes/` + user.id, {
-      //OVDE TREBA ID USER-A
       method: "GET",
       withCredentials: true,
     })
@@ -197,8 +157,6 @@ const TutorPocetna = () => {
     setUslugeID(usID);
   };
   useEffect(() => {
-    /*const obj = JSON.parse(userLogged);
-    setUser(obj);*/
     const getGradovi = async () => {
       fetch(api + `location`, {
         method: "GET",
@@ -216,19 +174,6 @@ const TutorPocetna = () => {
           })
           .then((actualData) => setNiz1(actualData));
       }
-      /*const obl = [];
-      const gradovi = [];
-
-      const q1 = query(kategorijeRef, where("stepen", "array-contains", nivo));
-      const querySnapshot1 = await getDocs(q1);
-      querySnapshot1.forEach((doc) => obl.push(doc.data().nazivKategorije));
-      setNiz1(obl);*/
-
-      /*const q2 = query(lokacijeRef);
-      const querySnapshot2 = await getDocs(q2);
-      querySnapshot2.forEach((doc) => gradovi.push(doc.data().grad));
-      console.log(gradovi);*/
-      //console.log(niz2);
     };
     getGradovi();
     ucitajUsluge();
@@ -250,7 +195,7 @@ const TutorPocetna = () => {
           new: false,
           locationId: grad.id,
           categoryId: oblast.id,
-          userId: user.id, //izmeni
+          userId: user.id,
         };
         await fetch(api + `class/addClass`, {
           withCredentials: true,
@@ -276,15 +221,6 @@ const TutorPocetna = () => {
         naslov !== "" &&
         opis !== ""
       ) {
-        //const zamenaDoc = doc(db, "usluge", IDzamene);
-        /*await updateDoc(zamenaDoc, {
-          kategorija: oblast,
-          lokacija: grad,
-          nazivUsluge: naslov,
-          opis: opis,
-          stepen: nivo,
-          fotografija: slika,
-        });*/
         let podaci = {
           name: naslov,
           bio: opis,
@@ -292,7 +228,7 @@ const TutorPocetna = () => {
           new: false,
           locationId: grad.id,
           categoryId: oblast.id,
-          userId: user.id, //izmeni
+          userId: user.id,
         };
         await fetch(api + `class/updateClass/` + IDzamene, {
           withCredentials: true,
@@ -336,42 +272,14 @@ const TutorPocetna = () => {
         setIDzamene(actualData.id);
         setSlika(actualData.photo);
       });
-
-    /*if (show === false) {
-            setShow(!show);
-        }*/
-
-    /*setOpen4(!open4);
-    setNivo(usluge.at(index).stepen); //OVO IZMENI DA BUDE BROJ OD 1 2 3 KAD PROCITA IZ BAZE
-    setOblast(usluge.at(index).kategorija);
-    setGrad(usluge.at(index).lokacija);
-    setNaslov(usluge.at(index).nazivUsluge);
-    setOpis(usluge.at(index).opis);
-    setIDzamene(uslugeID.at(index));
-    setSlika(usluge.at(index).fotografija);*/
   }
 
   async function izbrisiUslugu(id) {
     await fetch(api + "class/deleteClass/" + id, {
       method: "DELETE",
     });
-    //await deleteDoc(doc(db, "usluge", id));
     setOpen2(true);
     ucitajUsluge();
-  }
-
-  async function prikaziSrednjuOcenu(id) {
-    //let average = 0;
-    if (id != "") {
-      fetch(api + `grade/averageGrade/` + id)
-        .then((response) => {
-          return response.json();
-        })
-        .then((actualData) => {
-          //console.log(Number(actualData));
-          return Number(actualData);
-        });
-    }
   }
 
   async function prijaviOcenu(id) {
@@ -396,7 +304,6 @@ const TutorPocetna = () => {
     setOpis("");
     setIDzamene("");
     setSlika("");
-    //setShow(!show);
     setOpen4(true);
   }
 
@@ -412,18 +319,6 @@ const TutorPocetna = () => {
       });
     });
   };
-
-  /*async function promeniOcenu(id) {
-    if (id != undefined) {
-      fetch(api + `grade/updateNew/` + id, {
-        //OVDE TREBA ID USER-A
-        method: "PUT",
-        withCredentials: true,
-      }).then((response) => {
-        return response.json();
-      });
-    }
-  }*/
 
   async function prikaziOcene(id) {
     ucitajUsluge();
@@ -443,21 +338,6 @@ const TutorPocetna = () => {
       });
     }
     setOpen3(true);
-    /*const zamenaDoc = doc(db, "usluge", id);
-    await updateDoc(zamenaDoc, { nova: false });
-    setOpen3(true);
-    setOcene([]);
-    const q = query(oceneRef, where("uslugaID", "==", id));
-    const snapshot = await getDocs(q);*/
-
-    /*snapshot.docs.forEach((e) =>
-      setOcene((ocene) => [...ocene, { ...e.data(), idOcene: e.id }])
-    );*/
-
-    /*let temp = ocene;
-        temp.sort((a, b) => b.datum - a.datum);
-        console.log(temp);
-        setOcene(temp);*/
   }
   const Input = styled("input")({
     display: "none",
@@ -801,9 +681,6 @@ const TutorPocetna = () => {
                     <DialogContent dividers>
                       <>
                         {ocene.map((ocena, index) => {
-                          {
-                            /*promeniOcenu(ocena.id);*/
-                          }
                           return (
                             <Grid
                               display="flex"
@@ -844,7 +721,7 @@ const TutorPocetna = () => {
                                       Datum:{" "}
                                     </Box>
                                     {new Date(
-                                      ocena.date * 1000
+                                      Number(ocena.date)
                                     ).toLocaleDateString("de-DE", {
                                       year: "numeric",
                                       month: "2-digit",

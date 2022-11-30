@@ -15,12 +15,13 @@ import TutorProfil from "./Components/TutorProfil";
 //--Firebase imports--
 import { initializeApp } from "firebase/app";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "@emotion/react";
 import { theme } from "./Components/Theme";
 import Layout from "./Components/Layout";
 import RequireAuth from "./Components/RequireAuth";
+import useAuth from "./hooks/useAuth";
 const ROLES = {
   Student: "student",
   Tutor: "tutor",
@@ -42,6 +43,19 @@ export const api = "http://localhost:3000/";
 export const app = initializeApp(firebaseConfig);
 
 const App = () => {
+  /*const { setAuth } = useAuth();
+
+  useEffect(() => {
+    const obj = localStorage.getItem("user");
+    const userObj = JSON.parse(obj);
+    console.log(userObj);
+    let roles = [];
+    roles.push(userObj.role);
+    const user = [];
+    user.push(user);
+    setAuth({ user, roles });
+  }, []);*/
+
   return (
     <ThemeProvider theme={theme}>
       <Routes>

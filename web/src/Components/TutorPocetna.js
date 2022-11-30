@@ -683,6 +683,7 @@ const TutorPocetna = () => {
                         {ocene.map((ocena, index) => {
                           return (
                             <Grid
+                              key={ocena.id}
                               display="flex"
                               flexDirection="column"
                               flexWrap={"wrap"}
@@ -710,6 +711,7 @@ const TutorPocetna = () => {
                                   ) : null}
                                 </Box>
                                 <Typography
+                                  component={"div"}
                                   gutterBottom
                                   style={{
                                     display: "flex",
@@ -734,6 +736,7 @@ const TutorPocetna = () => {
                                 </Typography>
 
                                 <Typography
+                                  component={"div"}
                                   gutterBottom
                                   style={{
                                     display: "flex",
@@ -765,14 +768,17 @@ const TutorPocetna = () => {
                                   </ColorButton>
                                 </Typography>
 
-                                <Typography gutterBottom>
+                                <Typography gutterBottom component={"div"}>
                                   <Box fontWeight="800" display="inline">
                                     Komentar:{" "}
                                   </Box>
                                   {ocena.comment}
                                 </Typography>
 
-                                <Typography gutterBottom></Typography>
+                                <Typography
+                                  gutterBottom
+                                  component={"div"}
+                                ></Typography>
                               </Box>
                             </Grid>
                           );
@@ -864,7 +870,6 @@ const TutorPocetna = () => {
                           id="contained-button-file"
                           type="file"
                           onChange={handleChange2}
-                          fullWidth
                         />
                         <Button
                           variant="contained"

@@ -1,15 +1,26 @@
+import { useEffect } from "react";
 import { useLocation, Navigate, Outlet } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 
 const RequireAuth = ({ allowedRoles }) => {
-  const { auth } = useAuth();
+  const { auth, setAuth } = useAuth();
   const location = useLocation();
-  console.log(auth.roles);
-  console.log(allowedRoles);
+  //console.log(allowedRoles);
+  const obj = localStorage.getItem("user");
+  const userObj = JSON.parse(obj);
 
-  return auth?.roles?.find((role) => allowedRoles?.includes(role)) ? (
+  let roles = [];
+  if (userObj != null) roles.push(userObj.role);
+
+  /*const user = [];
+  user.push(userObj);
+  
+  setAuth({ user, roles });*/
+  //console.log(auth.roles);
+
+  return allowedRoles?.includes(userObj?.role) ? (
     <Outlet />
-  ) : auth?.user ? (
+  ) : userObj ? (
     <Navigate to="/unauthorized" state={{ from: location }} replace />
   ) : (
     <Navigate to="/login" state={{ from: location }} replace />

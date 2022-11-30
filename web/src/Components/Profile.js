@@ -131,8 +131,7 @@ const Profile = () => {
         padding={"1rem"}
       >
         <Grid
-          xs={12}
-          md={8}
+
           display="flex"
           flexDirection="column"
           component={Paper}
@@ -165,7 +164,7 @@ const Profile = () => {
               </Box>
               <Stack
                 direction="row"
-                alignItems="center"
+                alignitems="center"
                 spacing={2}
                 style={{ marginBottom: "1rem", marginTop: "1rem" }}
               >
@@ -175,7 +174,6 @@ const Profile = () => {
                     id="contained-button-file"
                     type="file"
                     onChange={handleChange}
-                    fullWidth
                   />
                   <Button
                     variant="contained"

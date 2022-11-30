@@ -107,7 +107,10 @@ const SingleChat = (props) => {
           const humanDateFormat = date.toLocaleTimeString();
           if (message.senderId === user.id) {
             return (
-              <div style={{ display: "flex", flexDirection: "row-reverse" }}>
+              <div
+                key={message.id}
+                style={{ display: "flex", flexDirection: "row-reverse" }}
+              >
                 <Box>
                   <ChipCopy
                     ja={true}
@@ -120,7 +123,7 @@ const SingleChat = (props) => {
             );
           } else {
             return (
-              <div>
+              <div key={message.id}>
                 <Box>
                   {props.sagovornik.student.id === user.id ? (
                     <ChipCopy

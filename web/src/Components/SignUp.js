@@ -19,6 +19,7 @@ import { api } from "../App";
 
 import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
+import { toast, ToastContainer } from "react-toastify";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -34,25 +35,32 @@ const SignUp = () => {
       username: email,
       password: password,
     };
-    await fetch(api + `user`, {
-      withCredentials: true,
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(podaci),
-    })
-      .then((response) => {
-        return response.json();
+    if (password.length < 8)
+      toast.error("Šifra mora biti duža od 8 karaktera!");
+    else {
+      await fetch(api + `user`, {
+        withCredentials: true,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(podaci),
       })
-      .then((actualData) => {
-        console.log(actualData);
-        let roles = [];
-        roles.push("undefined");
-        setAuth({ roles });
-        localStorage.setItem("user", JSON.stringify(actualData));
-        navigate("/setupProfile", { replace: true });
-      });
+        .then((response) => {
+          if (response.status == 409) {
+            toast.error("Profil sa unetom email adresom već postoji!");
+          }
+          return response.json();
+        })
+        .then((actualData) => {
+          let roles = [];
+          roles.push("undefined");
+          setAuth({ roles });
+          localStorage.setItem("user", JSON.stringify(actualData));
+          if(actualData.id!=null)
+          navigate("/setupProfile", { replace: true });
+        });
+    }
   };
 
   return (
@@ -63,14 +71,11 @@ const SignUp = () => {
       justifyContent="center"
       sx={{ height: "100vh" }}
     >
-      {console.log("SIGNUP")}
       <CssBaseline />
 
       <Grid
         item
-        xs={12}
-        sm={9}
-        md={4}
+        style={{ paddingTop: "3%", paddingBottom: "4%" }}
         component={Paper}
         elevation={12}
         display="flex"
@@ -78,7 +83,7 @@ const SignUp = () => {
         alignItems="center"
       >
         <Grid item style={{ paddingTop: 16 }}>
-          <img src={logo2} height="100px" />
+          <img src={logo2} style={{ maxHeight: 100 }} />
         </Grid>
 
         <Typography
@@ -90,7 +95,7 @@ const SignUp = () => {
           Napravite novi nalog
         </Typography>
 
-        <Box className="glavniBox" component="form" noValidate>
+        <Box className="glavniBox" component="form" noValidate sx={{ mt: 1 }}>
           <TextField
             margin="normal"
             required
@@ -124,12 +129,12 @@ const SignUp = () => {
             autoComplete="current-password"
           />
 
-          <Box style={{ marginBottom: 50 }}>
+          <Box>
             <ColorButton
               fullWidth
               onClick={signUp}
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 3, mb: 2, height: "40px" }}
             >
               Napravite nalog
             </ColorButton>
@@ -140,8 +145,8 @@ const SignUp = () => {
               alignItems="center"
               justifyContent="center"
             >
-              <Grid item>
-                <Link href="/login" variant="body2">
+              <Grid item style={{ marginTop: "3%" }}>
+                <Link href="/login" variant="body1">
                   {"Već imate nalog? Prijavite se!"}
                 </Link>
               </Grid>
@@ -149,6 +154,11 @@ const SignUp = () => {
           </Box>
         </Box>
       </Grid>
+      <ToastContainer
+        position="top-center"
+        hideProgressBar={true}
+        newestOnTop
+      />
     </Grid>
   );
 };

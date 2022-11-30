@@ -69,8 +69,6 @@ const UserPocetna = () => {
           item
           component={Paper}
           elevation={10}
-          sm={12}
-          md={8}
           sx={{ marginTop: "2rem", marginBottom: "2rem" }}
         >
           <Card sx={{ display: "flex" }}>
@@ -124,8 +122,6 @@ const UserPocetna = () => {
         <Grid
           component={Paper}
           elevation={10}
-          sm={12}
-          md={8}
           display="flex"
           flexDirection={"column"}
           marginBottom="2rem"

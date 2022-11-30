@@ -7,6 +7,7 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
+import slikaUsluga from "../assets/slikaUsluga.jpg";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   Box,
@@ -80,6 +81,7 @@ export const ControlledAccordions = (props) => {
       {niz.map((usluga) => {
         return (
           <Accordion
+            key={usluga.id}
             expanded={expanded === "panel" + niz.indexOf(usluga)}
             onChange={handleChange("panel" + niz.indexOf(usluga))}
           >
@@ -99,7 +101,7 @@ export const ControlledAccordions = (props) => {
                   {usluga.photo ? (
                     <img src={usluga.photo} height="150px" />
                   ) : (
-                    <img src={undf} height="150px" />
+                    <img src={slikaUsluga} height="150px" />
                   )}
                 </Box>
                 <Box

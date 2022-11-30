@@ -32,11 +32,11 @@ export default function SignIn(props) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     let username = data.get("username");
-    let password = "";
+    let password = data.get("password");//admin1234
 
     const podaci = {
-      username: data.get("username"),
-      password: "admin1234",
+      username: username,
+      password: password,
     };
     fetch(api + `auth/login`, {
       withCredentials: true,

@@ -19,18 +19,22 @@ export const app = initializeApp(firebaseConfig);
 export const api = "http://localhost:3000/";
 const App = () => {
   const [token, setToken] = useState("");
+  const obj=localStorage.getItem("user");
+  const ucerObj=JSON.parse(obj);
 
   const tokenAquire = (val) => {
     localStorage.setItem("token", val);
+    console.log(localStorage.getItem("token") )
     setToken(val);
   };
 
   const logout = () => {
     localStorage.setItem("token", "");
+    localStorage.removeItem("user");
     setToken("");
   };
 
-  return localStorage.getItem("token") != "" ? (
+  return ucerObj?.role == "admin" ? (
     <Dashboard logout={logout}></Dashboard>
   ) : (
     <SignIn tokenCb={tokenAquire} />

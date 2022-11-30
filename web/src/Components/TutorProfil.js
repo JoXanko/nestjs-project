@@ -62,14 +62,12 @@ const TutorProfil = (props) => {
     setIzabrani(obj);
 
     const func = async () => {
-      await fetch(
-        api + `grade/userGrade/` + obj.id + "/" + user.id
-      )
+      await fetch(api + `grade/userGrade/` + obj.id + "/" + user.id)
         .then((response) => {
           return response.json();
         })
         .then((actualData) => {
-          console.log(actualData)
+          console.log(actualData);
           if (actualData != false) setOcenjeno(actualData);
           else setOcenjeno({});
         });
@@ -222,7 +220,7 @@ const TutorProfil = (props) => {
           <Grid item container spacing={5}>
             {usluge.map((usluga) => {
               return (
-                <Grid item md={4} sm={6} xs={12}>
+                <Grid key={usluga.id} item md={4} sm={6} xs={12}>
                   <Card>
                     {usluga.photo ? (
                       <CardMedia

@@ -36,6 +36,9 @@ const Login = () => {
   const inputEmail = (event) => {
     setEmail(event.target.value);
   };
+  const otvoriSignUp = () => {
+    navigate("/signup");
+  };
   const inputPassword = (event) => setPassword(event.target.value);
 
   const handleSubmit = async (event) => {
@@ -85,9 +88,7 @@ const Login = () => {
 
         <Grid
           item
-          xs={24}
-          sm={8}
-          md={4}
+          style={{ paddingTop: "3%", paddingBottom: "4%" }}
           component={Paper}
           elevation={12}
           display="flex"
@@ -156,29 +157,31 @@ const Login = () => {
                 alignItems="center"
                 justifyContent="center"
               >
-                <Grid item>
-                  <Link href="/signup" variant="body2">
+                <Grid item style={{ marginTop: "3%" }}>
+                  <Link href="/signup" variant="body1">
                     {"Nemate nalog? Napravite ga!"}
                   </Link>
                 </Grid>
               </Grid>
             </Box>
 
-            {/*<ColorButton
-              variant="contained"
-              fullWidth
-              color="primary"
-              className="Login"
-              onClick={signInWithGoogle}
-              sx={{ mt: 4, mb: 3, height: "40px" }}
-            >
-              <span>
-                <img src={googleImg} height="25px" width="25px" />
-              </span>
-              <span>
-                <span>Prijavite se preko Google-a</span>
-              </span>
-            </ColorButton>*/}
+            {/*
+              <ColorButton
+                variant="contained"
+                fullWidth
+                color="primary"
+                className="Login"
+                onClick={otvoriSignUp}
+                sx={{ mt: 4, mb: 3, height: "40px" }}
+              >
+                <span>
+                  <img src={googleImg} height="25px" width="25px" />
+                </span>
+                <span>
+                  <span>Prijavite se preko Google-a</span>
+                </span>
+              </ColorButton>
+            */}
           </Box>
         </Grid>
       </Grid>

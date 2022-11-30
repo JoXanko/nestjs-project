@@ -94,7 +94,7 @@ const Chat = () => {
             />
           </Grid>
           {filtrirano.map((chat) => (
-            <Grid item xs={12} sm={12} md={12} mt="1rem">
+            <Grid item xs={12} sm={12} md={12} mt="1rem" key={chat.id}>
               <div
                 className="contact"
                 onClick={(event) => {

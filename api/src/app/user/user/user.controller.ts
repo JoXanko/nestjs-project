@@ -23,6 +23,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { User } from 'src/app/entities/user/user.entity';
 import { CreateUserDto } from 'src/app/entities/user/dto/create-user.dto';
 import { UpdateUserDto } from 'src/app/entities/user/dto/update-user.dto';
+import { SessionGuard } from 'src/app/auth/guards/session.guard';
 
 @ApiTags('User')
 @Controller('user')
@@ -38,21 +39,25 @@ export class UserController {
   }
 
   @Get()
+  @UseGuards(SessionGuard)
   findAll() {
     return this.userService.findAll();
   }
 
   @Get('/getByRole')
+  @UseGuards(SessionGuard)
   findAllByRole() {
     return this.userService.findUsersByRole();
   }
 
   @Get('/getStudents')
+  @UseGuards(SessionGuard)
   findStudents() {
     return this.userService.findAllStudents();
   }
 
   @Get('/getTutors')
+  @UseGuards(SessionGuard)
   findTutors() {
     return this.userService.findAllTutors();
   }
@@ -71,6 +76,7 @@ export class UserController {
   }
 
   @Delete(':id')
+  @UseGuards(SessionGuard)
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.userService.remove(id);
   }

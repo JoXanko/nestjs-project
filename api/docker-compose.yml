@@ -1,10 +1,21 @@
 version: '3'
 
 networks:
-  redis:
+  ITutor:
     driver: bridge
 
 services:
+  postgres:
+    env_file: ./docker-env.env
+    image: postgres
+    restart: always
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - ITutor
+
   redis:
     image: redis
     restart: always
@@ -14,7 +25,7 @@ services:
     volumes:
       - ./redis.conf:/usr/local/etc/redis/redis.conf
     networks:
-      - redis
+      - ITutor
 
 volumes:
   pgdata:

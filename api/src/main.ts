@@ -12,6 +12,8 @@ import { environment } from './environment/environment';
 import * as passport from 'passport';
 
 async function bootstrap() {
+  const port = 3000;
+  const cookieAge = 1000 * 60 * 60 * 24;
   const app = await NestFactory.create(AppModule);
   //app.enableCors(); //treba il ne?
   app.enableCors({
@@ -61,17 +63,17 @@ async function bootstrap() {
     session({
       store: new RedisStore({ client: redisClient }),
       name: environment.sessionName,
-      secret: 'redisSecret',
+      secret: environment.password,
       resave: false,
       saveUninitialized: false,
       cookie: {
-        maxAge: 1000 * 60 * 60 * 24,
+        maxAge: cookieAge,
       },
     }),
   );
   app.use(passport.initialize());
   app.use(passport.session());
 
-  await app.listen(3000);
+  await app.listen(port);
 }
 bootstrap();

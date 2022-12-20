@@ -17,6 +17,7 @@ export class AuthService {
         res.send('');
       });
     });
+    //console.log(req.session);
   }
 
   async validateUser(username: string, password: string) {

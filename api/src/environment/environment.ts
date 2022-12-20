@@ -1,5 +1,6 @@
 export const environment = {
   production: false,
+  password: 'redisSecret',
   sessionName: 'redis',
   port: 4200,
   redisHost: 'localhost',

@@ -1,13 +1,19 @@
 FROM node:19-alpine3.15
 
-WORKDIR /user/src/app
+RUN mkdir /app
 
-COPY package*.json ./
+WORKDIR /app
+
+ENV PORT=3000
+
+EXPOSE ${PORT}
+
+COPY package*.json /app
 
 RUN npm install
 
-COPY . .
+COPY . /app
 
 RUN npm run build
-CMD [ "npm", "run", "start:prod" ]
 
+CMD [ "npm", "run", "start:debug" ]

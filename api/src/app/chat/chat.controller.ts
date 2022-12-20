@@ -7,7 +7,9 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  UseGuards,
 } from '@nestjs/common';
+import { SessionGuard } from '../auth/guards/session.guard';
 import { ChatDto } from '../entities/chat/dto/chat.dto';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -16,11 +18,13 @@ import { ApiTags } from '@nestjs/swagger';
 export class ChatController {
   constructor(private chatService: ChatService) {}
   @Get('getChatForUser/:idUser')
+  @UseGuards(SessionGuard)
   public getChatsForUser(@Param('idUser', ParseIntPipe) idUser: number) {
     return this.chatService.getAll(idUser);
   }
 
   @Get('getChat/:idTutor/:idStudent')
+  @UseGuards(SessionGuard)
   public getChats(
     @Param('idTutor', ParseIntPipe) idTutor: number,
     @Param('idStudent', ParseIntPipe) idStudent: number,
@@ -29,11 +33,13 @@ export class ChatController {
   }
 
   @Post()
+  @UseGuards(SessionGuard)
   public addChat(@Body() dto: ChatDto) {
     return this.chatService.create(dto);
   }
 
   @Put('updateSeen/:idChat')
+  @UseGuards(SessionGuard)
   public updateSeen(@Param('idChat', ParseIntPipe) idChat: number) {
     return this.chatService.updateSeen(idChat);
   }

@@ -5,8 +5,10 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { SessionGuard } from 'src/app/auth/guards/session.guard';
 import { MessageDto } from 'src/app/entities/message/dto/message.dto';
 import { MessageService } from './message.service';
 @ApiTags('Message')
@@ -19,16 +21,19 @@ export class MessageController {
   }
 
   @Get('getChatMessages/:idChat')
+  @UseGuards(SessionGuard)
   public getMessage(@Param('idChat', ParseIntPipe) idChat: number) {
     return this.messageService.getById(idChat);
   }
 
   @Post('messageSend')
+  @UseGuards(SessionGuard)
   public postMessage(@Body() dto: MessageDto) {
     return this.messageService.postMessage(dto);
   }
 
   @Post()
+  @UseGuards(SessionGuard)
   public addMessage(@Body() dto: MessageDto) {
     return this.messageService.create(dto);
   }

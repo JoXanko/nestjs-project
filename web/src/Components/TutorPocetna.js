@@ -627,7 +627,7 @@ const TutorPocetna = () => {
                           fontWeight="500"
                           variant="h6"
                         >
-                          ○ Stepen: {"1" /*ovo resi*/}
+                          ○ Stepen: {usluga.category.level.name}
                         </Typography>
                         <Typography
                           component="h3"

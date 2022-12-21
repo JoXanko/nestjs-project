@@ -40,6 +40,8 @@ const TutorProfil = (props) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(0);
   const [komentar, setKomentar] = useState("");
+  const [locationN, setLocation] = useState("");
+  const [category, setCategory] = useState("");
   const [ocenjeno, setOcenjeno] = useState({});
 
   const doPoruka = () => {
@@ -58,7 +60,10 @@ const TutorProfil = (props) => {
   };
 
   const prikaziVise = (obj) => {
+    console.log("obj")
     console.log(obj);
+    setLocation(obj.location.name)
+    setCategory(obj.category.name)
     setIzabrani(obj);
 
     const func = async () => {
@@ -83,7 +88,7 @@ const TutorProfil = (props) => {
   const add = () => {
     const dodajRating = async () => {
       let podaci = {
-        date: Timestamp.now(),
+        date: Date.now(),
         comment: komentar,
         studentId: user.id,
         grade: value,
@@ -117,6 +122,7 @@ const TutorProfil = (props) => {
         return response.json();
       })
       .then((actualData) => {
+        console.log(actualData)
         setUsluge(actualData);
       });
   };
@@ -157,7 +163,7 @@ const TutorProfil = (props) => {
           style={{ marginTop: 15 }}
         >
           <Avatar
-            src={location.state.imageUrl}
+            src={location.state.photo}
             alt="U"
             sx={{ width: "200px", height: "200px" }}
           />
@@ -255,7 +261,7 @@ const TutorProfil = (props) => {
                         value={usluga.avgGrade}
                         readOnly
                         sx={{ mr: 1 }}
-                      />
+                        />
                       <PopupDialog
                         fullWidth={true}
                         onClose={iskljuci}
@@ -265,15 +271,16 @@ const TutorProfil = (props) => {
                         <PopupDialogTitle
                           id="customized-dialog-title"
                           onClose={iskljuci}
-                        >
+                          >
                           {izabrani.name}
                         </PopupDialogTitle>
                         <DialogContent dividers>
+                          {console.log("USLUGA:"+izabrani)}
                           <Typography gutterBottom>
                             <Box fontWeight="800" display="inline">
                               Kategotrija:{" "}
                             </Box>
-                            {!izabrani ? izabrani.category.name : ""}
+                            {category}
                           </Typography>
 
                           <Typography gutterBottom component="div">
@@ -287,7 +294,7 @@ const TutorProfil = (props) => {
                             <Box fontWeight="800" display="inline">
                               Lokacija:{" "}
                             </Box>
-                            {!izabrani ? izabrani.location.name : ""}
+                            {locationN}
                           </Typography>
 
                           {ocenjeno.grade !== undefined ? (
@@ -350,7 +357,7 @@ const TutorProfil = (props) => {
         margin={"auto"}
         padding={"auto"}
       >
-        <h4 style={{ color: "#FFFFFF" }}>Copyright : JAiL team © 2022</h4>
+        <h4 style={{ color: "#FFFFFF" }}>Copyright : @JoXanko © 2022</h4>
       </Box>
     </Box>
   );

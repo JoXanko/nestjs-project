@@ -287,7 +287,7 @@ const Profile = () => {
                 width: "45%",
               }}
             >
-              <Button
+              {/* <Button
                 variant="outlined"
                 color="warning"
                 onClick={promeniLozinku}
@@ -295,7 +295,7 @@ const Profile = () => {
                 startIcon={<LockResetOutlinedIcon />}
               >
                 Promenite lozinku
-              </Button>
+              </Button> */}
             </Box>
           </Box>
         </Grid>

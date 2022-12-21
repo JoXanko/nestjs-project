@@ -56,7 +56,7 @@ const SingleChat = (props) => {
       //POKUPI SVE PORUKE!!!
 
       ucitajPoruke();
-    }, 1000);
+    }, 200);
 
     return () => clearInterval(interval);
   }, [props.sagovornik]);

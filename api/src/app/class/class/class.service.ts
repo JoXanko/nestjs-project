@@ -84,7 +84,7 @@ export class ClassService {
         user: {
           id: idTutor,
         },
-      }, //??ovako treba?
+      }, 
     });
     let sum = 0;
     let count = 0;
@@ -101,11 +101,6 @@ export class ClassService {
     });
     return classes;
   }
-
-  /*public async create(classDto: ClassDto) {
-    const clas = this.classRepository.create(classDto);
-    return await this.classRepository.save(clas);
-  }*/
 
   public async create(classDto: ClassDto) {
     const newClass = new Class();

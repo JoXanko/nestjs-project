@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmConfig } from 'typeorm.config';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { CategoryModule } from './app/category/category/category.module';
 import { ChatModule } from './app/chat/chat.module';
 import { ClassModule } from './app/class/class/class.module';
@@ -45,7 +43,6 @@ import { config } from './config';
     }),
     AuthModule,
   ],
-  controllers: [AppController],
-  providers: [{ provide: RolesGuard.name, useClass: RolesGuard }, AppService],
+  providers: [{ provide: RolesGuard.name, useClass: RolesGuard }],
 })
 export class AppModule {}

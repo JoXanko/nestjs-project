@@ -12,7 +12,7 @@ import { environment } from './environment/environment';
 import * as passport from 'passport';
 
 async function bootstrap() {
-  const port = 3000;
+  const port = environment.port;
   const cookieAge = 1000 * 60 * 60 * 24;
   const app = await NestFactory.create(AppModule);
   //app.enableCors(); //treba il ne?

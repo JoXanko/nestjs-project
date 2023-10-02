@@ -39,7 +39,11 @@ function Copyright(props) {
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Sva prava zadržana © '}
 
+<<<<<<< HEAD
       ITutor{' '}
+=======
+      ITutor,JoXanko{' '}
+>>>>>>> 10060ce01a4d05536733e9d22ccfa449c9b7fc92
       {new Date().getFullYear()}
       {'.'}
     </Typography>

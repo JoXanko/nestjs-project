@@ -28,8 +28,13 @@ export default function Lokacije() {
 
   const handleDodaj = async (event) => {
     let podaci = { name: naziv };
+<<<<<<< HEAD
     console.log(naziv)
     await fetch(api + `location/`, {
+=======
+    console.log(podaci);
+    await fetch(api + `location`, {
+>>>>>>> 10060ce01a4d05536733e9d22ccfa449c9b7fc92
       withCredentials: true,
       method: "POST",
       headers: {

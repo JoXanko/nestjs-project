@@ -79,17 +79,21 @@ export class ClassService {
 
   public async getById(idTutor: number) {
     const classes = await this.classRepository.find({
+<<<<<<< HEAD
       relations: {
         user: true,
         location: true,
         category: { level: true },
         grades: true,
       },
+=======
+      relations: { user: true, location: true, category: {level:true}, grades: true },
+>>>>>>> 10060ce01a4d05536733e9d22ccfa449c9b7fc92
       where: {
         user: {
           id: idTutor,
         },
-      }, //??ovako treba?
+      }, 
     });
     let sum = 0;
     let count = 0;
@@ -106,11 +110,6 @@ export class ClassService {
     });
     return classes;
   }
-
-  /*public async create(classDto: ClassDto) {
-    const clas = this.classRepository.create(classDto);
-    return await this.classRepository.save(clas);
-  }*/
 
   public async create(classDto: ClassDto) {
     const newClass = new Class();

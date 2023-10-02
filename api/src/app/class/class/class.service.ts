@@ -79,7 +79,12 @@ export class ClassService {
 
   public async getById(idTutor: number) {
     const classes = await this.classRepository.find({
-      relations: { user: true, location: true, category: true, grades: true },
+      relations: {
+        user: true,
+        location: true,
+        category: { level: true },
+        grades: true,
+      },
       where: {
         user: {
           id: idTutor,

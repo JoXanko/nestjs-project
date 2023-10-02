@@ -16,6 +16,7 @@ import { AuthModule } from './app/auth/auth.module';
 import { RolesGuard } from './app/auth/guards/roles.guard';
 import { ConfigModule } from '@nestjs/config';
 import { config } from './config';
+import { WebsocketModule } from './app/gateway/websocket.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { config } from './config';
       isGlobal: true,
       load: [config],
     }),
+    WebsocketModule,
     TypeOrmModule.forRoot(typeOrmConfig),
     CategoryModule,
     ChatModule,

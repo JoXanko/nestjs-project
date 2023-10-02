@@ -14,7 +14,7 @@ const Futer = () => {
       width={"100%"}
       padding={"auto"}
     >
-      <h4 style={{ color: "#FFFFFF" }}>Copyright : JAiL team © 2022</h4>
+      <h4 style={{ color: "#FFFFFF" }}>Copyright: ITutor © 2023</h4>
     </Box>
   );
 };

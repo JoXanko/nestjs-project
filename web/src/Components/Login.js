@@ -60,7 +60,6 @@ const Login = () => {
         return response.json();
       })
       .then((actualData) => {
-        console.log(actualData);
         let roles = [];
         roles.push(actualData.role);
         const user = [];

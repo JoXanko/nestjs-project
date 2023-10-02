@@ -627,7 +627,7 @@ const TutorPocetna = () => {
                           fontWeight="500"
                           variant="h6"
                         >
-                          ○ Stepen: {"1" /*ovo resi*/}
+                          ○ Stepen: {usluga.category.level.name}
                         </Typography>
                         <Typography
                           component="h3"
@@ -681,6 +681,8 @@ const TutorPocetna = () => {
                     <DialogContent dividers>
                       <>
                         {ocene.map((ocena, index) => {
+                          const date = new Date(Number(ocena.date));
+                          const humanDateFormat = date.toLocaleTimeString();
                           return (
                             <Grid
                               key={ocena.id}
@@ -722,16 +724,7 @@ const TutorPocetna = () => {
                                     <Box fontWeight="800" display="inline">
                                       Datum:{" "}
                                     </Box>
-                                    {new Date(
-                                      Number(ocena.date)
-                                    ).toLocaleDateString("de-DE", {
-                                      year: "numeric",
-                                      month: "2-digit",
-                                      day: "2-digit",
-                                      hour: "numeric",
-                                      minute: "numeric",
-                                      second: "numeric",
-                                    })}
+                                    {humanDateFormat}
                                   </Box>
                                 </Typography>
 

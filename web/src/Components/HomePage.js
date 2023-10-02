@@ -26,9 +26,7 @@ const HomePage = () => {
         height: "100%",
         minHeight: "100vh",
       }}
-    >
-      {console.log("U HOME USER" + user)}
-      {/*user.role==="undefined" ? <Navigate to="/setupProfile"/> : null*/}
+    >{/*user.role==="undefined" ? <Navigate to="/setupProfile"/> : null*/}
 
       <CssBaseline />
       <ResponsiveAppBar user={user} />

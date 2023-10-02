@@ -47,7 +47,6 @@ export default function SignIn(props) {
       body: JSON.stringify(podaci),
     })
       .then((response) => {
-        console.log("logged in");
         return response.json();
       })
       .then((actualData) => {

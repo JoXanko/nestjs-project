@@ -20,12 +20,13 @@ export const api = "http://localhost:3000/";
 const App = () => {
   const [token, setToken] = useState("");
   const obj=localStorage.getItem("user");
-  const ucerObj=JSON.parse(obj);
+  const userObj=JSON.parse(obj);
+  console.log(userObj);
 
   const tokenAquire = (val) => {
-    localStorage.setItem("token", val);
+    localStorage.setItem("token", "token");
     console.log(localStorage.getItem("token") )
-    setToken(val);
+    setToken("token");
   };
 
   const logout = () => {
@@ -34,7 +35,7 @@ const App = () => {
     setToken("");
   };
 
-  return ucerObj?.role == "admin" ? (
+  return userObj?.role == "admin" ? (
     <Dashboard logout={logout}></Dashboard>
   ) : (
     <SignIn tokenCb={tokenAquire} />

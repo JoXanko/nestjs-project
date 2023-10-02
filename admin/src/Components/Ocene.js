@@ -12,6 +12,7 @@ import Button from "@mui/material/Button";
 import { ButtonGroup, Typography, Box } from "@mui/material";
 import ProfileBadge from "./ProfilBadge";
 import { api } from "../App";
+import Avatar from "@mui/material/Avatar";
 
 
 export default function Ocene() {
@@ -47,6 +48,7 @@ export default function Ocene() {
       })
       .then((actualData) => {
         setOcene(actualData);
+        console.log(actualData)
       });
   };
 
@@ -66,8 +68,10 @@ export default function Ocene() {
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell>Korisnik</TableCell>
-                <TableCell>Ime učenika</TableCell>
+                <TableCell>Fotografija</TableCell>
+                <TableCell>ID korisnik</TableCell>
+                <TableCell>Ime</TableCell>
+                <TableCell>Prezime</TableCell>
                 <TableCell>ID usluge</TableCell>
                 <TableCell>Komentar</TableCell>
                 <TableCell>Ocena</TableCell>
@@ -81,11 +85,15 @@ export default function Ocene() {
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell>
-                    <ProfileBadge korisnikID={row.student.id} />
+                  <Avatar src={row.student.imageUrl} />
                   </TableCell>
-                  {/*<TableCell>
-                    {row.student.name + " " + row.student.surname}
-                  </TableCell>*/}
+                  <TableCell>
+                    {row.student.id}
+                  </TableCell>
+                  <TableCell>
+                    {row.student.name}
+                  </TableCell>
+                  <TableCell>{row.student.surname}</TableCell>
                   <TableCell>{row.class.id}</TableCell>
                   <TableCell>{row.comment}</TableCell>
                   <TableCell>{row.grade}</TableCell>

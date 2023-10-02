@@ -31,7 +31,6 @@ const TutorProfil = (props) => {
   let userLogged = localStorage.getItem("user");
   const user = JSON.parse(userLogged);
   const location = useLocation();
-  console.log(location.state.idUser);
   const navigate = useNavigate();
   /*let { id } = useParams();
   console.log("ovo je id " + id);*/
@@ -77,13 +76,14 @@ const TutorProfil = (props) => {
   };
 
   const iskljuci = () => {
+    setIzabrani("");
     setOpen(false);
   };
 
   const add = () => {
     const dodajRating = async () => {
       let podaci = {
-        date: Timestamp.now(),
+        date: Date.now(),
         comment: komentar,
         studentId: user.id,
         grade: value,
@@ -157,7 +157,7 @@ const TutorProfil = (props) => {
           style={{ marginTop: 15 }}
         >
           <Avatar
-            src={location.state.imageUrl}
+            src={location.state.photo}
             alt="U"
             sx={{ width: "200px", height: "200px" }}
           />
@@ -273,7 +273,7 @@ const TutorProfil = (props) => {
                             <Box fontWeight="800" display="inline">
                               Kategotrija:{" "}
                             </Box>
-                            {!izabrani ? izabrani.category.name : ""}
+                            {izabrani&&open==true ? izabrani.category.name : ""}
                           </Typography>
 
                           <Typography gutterBottom component="div">
@@ -287,7 +287,8 @@ const TutorProfil = (props) => {
                             <Box fontWeight="800" display="inline">
                               Lokacija:{" "}
                             </Box>
-                            {!izabrani ? izabrani.location.name : ""}
+                            {izabrani&&open==true ? izabrani.location.name : ""}
+                            {console.log(izabrani)}
                           </Typography>
 
                           {ocenjeno.grade !== undefined ? (
@@ -350,7 +351,7 @@ const TutorProfil = (props) => {
         margin={"auto"}
         padding={"auto"}
       >
-        <h4 style={{ color: "#FFFFFF" }}>Copyright : JAiL team © 2022</h4>
+        <h4 style={{ color: "#FFFFFF" }}>Copyright: ITutor © 2023</h4>
       </Box>
     </Box>
   );

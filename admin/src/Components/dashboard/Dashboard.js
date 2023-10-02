@@ -37,9 +37,9 @@ import Lokacije from '../Lokacije';
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Sva prava rezervisana © '}
+      {'Sva prava zadržana © '}
 
-      ITutor,JAiL{' '}
+      ITutor{' '}
       {new Date().getFullYear()}
       {'.'}
     </Typography>

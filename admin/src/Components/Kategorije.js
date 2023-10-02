@@ -38,7 +38,9 @@ export default function Kategorije() {
   };
 
   const handleDodaj = async (event) => {
+    console.log(naziv)
     if (osnovna) {
+      console.log(naziv)
       let podaci = {
         name: naziv,
         levelId: 1,
@@ -56,6 +58,7 @@ export default function Kategorije() {
     }
 
     if (srednja) {
+      console.log(naziv)
       let podaci = {
         name: naziv,
         levelId: 2,
@@ -73,6 +76,7 @@ export default function Kategorije() {
     }
 
     if (faks) {
+      console.log(naziv)
       let podaci = {
         name: naziv,
         levelId: 3,
@@ -112,11 +116,11 @@ export default function Kategorije() {
     <Grid container overflow={"scroll"}>
       <Grid item md={12} padding={"1rem"}>
         <Typography variant={"h4"} sx={{ mb: "1rem" }}>
-          Kategorije
+          Oblasti
         </Typography>
         <Grid width={"50%"}>
           <Typography sx={{ mb: "0.5rem" }} variant={"h6"}>
-            Dodajte kategoriju
+            Dodajte oblast
           </Typography>
           <TextField
             sx={{ mb: "0.5rem" }}
@@ -166,7 +170,7 @@ export default function Kategorije() {
           <Table sx={{ minWidth: 650 }}>
             <TableHead>
               <TableRow>
-                <TableCell>Kategorija</TableCell>
+                <TableCell>Naziv oblasti</TableCell>
                 <TableCell>Nivo osnovne škole</TableCell>
                 <TableCell>Nivo srednje škole</TableCell>
                 <TableCell>Nivo fakulteta</TableCell>

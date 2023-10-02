@@ -11,7 +11,7 @@ import { DataSourceOptions } from 'typeorm';
 
 export const typeOrmConfig: DataSourceOptions = {
   type: 'postgres',
-  host: 'postgres',
+  host: 'postgres',//localhost kad hocu bez docker-compose, a postgres kad hocu docker-compose
   port: 5432,
   username: 'postgres',
   password: 'mysecretpassword',

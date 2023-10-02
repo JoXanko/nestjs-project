@@ -17,8 +17,10 @@ import SingleChat from "./SingleChat";
 import { fontWeight } from "@mui/system";
 import { useLocation } from "react-router-dom";
 import { api } from "../App";
+import io from 'socket.io-client';
 
 const Chat = () => {
+  const socket = io(api);
   const location = useLocation();
   //console.log(location.state);
   let userLogged = localStorage.getItem("user");
@@ -27,6 +29,10 @@ const Chat = () => {
   const [prikaz, setPrikaz] = useState({});
   const [filter, setFilter] = useState("");
   const [filtrirano, setFiltrirano] = useState([]);
+
+  const handleJoinRoom = (name) => {
+    // socket.emit('joinRoom', name);
+  };
 
   useEffect(() => {
     let temp = [];
@@ -43,7 +49,6 @@ const Chat = () => {
         temp.push(e);
       }
     });
-    console.log(temp);
     setFiltrirano(temp);
   }, [filter]);
 
@@ -97,13 +102,15 @@ const Chat = () => {
             <Grid item xs={12} sm={12} md={12} mt="1rem" key={chat.id}>
               <div
                 className="contact"
-                onClick={(event) => {
+                onClick={(event) => {handleJoinRoom(chat.id);
                   chat.student.id === user.id
                     ? setPrikaz(chat)
                     : setPrikaz(chat); //postavi chat kao glavni koristi se u singleChat
                 }}
               >
-                <Avatar alt={undf} margin="auto" src={chat.fotografija} />
+                {chat.student.id === user.id
+                  ? <Avatar alt={undf} margin="auto" src={chat.tutor.imageUrl} />
+                  : <Avatar alt={undf} margin="auto" src={chat.student.imageUrl} />}                
                 <Typography margin="auto" align="center" sx={{ ml: 1.5 }}>
                   {chat.student.id === user.id
                     ? chat.tutor.name + " " + chat.tutor.surname

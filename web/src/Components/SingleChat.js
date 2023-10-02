@@ -1,65 +1,110 @@
 import React, { useEffect, useState, useRef } from "react";
 
 import { api } from "../App.js";
-import { app } from "../App";
 import { TextField } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { ChipCopy } from "./Theme";
 import { Avatar } from "@mui/material";
 import Box from "@mui/material/Box";
 import SendIcon from "@mui/icons-material/Send";
+import io from 'socket.io-client';
+import CircleIcon from '@mui/icons-material/Circle';
+import TripOriginOutlinedIcon from '@mui/icons-material/TripOriginOutlined';
+import Pulsating from "./pulsating";
+import styled from "styled-components";
+
+const StyledDiv = styled.div`
+  align-items: center;
+  background: ${({ color }) => color || "limegreen"};
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  justify-content: center;
+`;
 
 const SingleChat = (props) => {
-  console.log(props); //props je ceo chat id/student/tutor
-  const skrol = useRef();
-  let userLogged = localStorage.getItem("user");
-  const user = JSON.parse(userLogged);
-  const [messages, setMessages] = useState([]);
-  const [novaPoruka, setNovaPoruka] = useState("");
-
-  const posaljiPoruku = async () => {
-    let podaci = {
-      text: novaPoruka,
-      date: Date.now(),
-      senderId: user.id,
-      chatId: props.sagovornik.id,
-    };
-    console.log(podaci);
-    await fetch(api + `message/messageSend`, {
-      withCredentials: true,
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(podaci),
-    }).then((response) => {
-      setNovaPoruka("");
-      return response.json();
-    });
-    ucitajPoruke();
-    skrol.current.scrollIntoView({ behavior: "smooth" });
-  };
-
-  useEffect(() => {
-    skrol.current.scrollIntoView({ behavior: "auto" });
-  }, [messages]);
-
   const ucitajPoruke = async () => {
+    console.log("ovde");
     await fetch(api + `message/getChatMessages/` + props.sagovornik.id)
       .then((response) => {
         return response.json();
       })
       .then((actualData) => setMessages(actualData));
   };
+
+  const [socket, setSocket] = useState(null);
+
+  const skrol = useRef();
+  let userLogged = localStorage.getItem("user");
+  const user = JSON.parse(userLogged);
+  const [messages, setMessages] = useState([]);
+  const [novaPoruka, setNovaPoruka] = useState("");
+  const [joined, setJoined] = useState("");
+  const [oldRoom, setOldRoom] = useState("")
+  const [userONLINE, setUserONLINE] = useState(false);
+
   useEffect(() => {
-    const interval = setInterval(() => {
-      //POKUPI SVE PORUKE!!!
+    if (socket) {
+      let podaci = { room: oldRoom, userId: user.id }
+      socket.emit("leaveRoom", podaci)
+    }
+    setOldRoom(props.sagovornik.id)
+  }, [props]);
 
-      ucitajPoruke();
-    }, 1000);
+  if (joined != props.sagovornik.id && socket) {
+    ucitajPoruke();
+    let podaci = {
+      room: props.sagovornik.id,
+      userId: user.id,
+    }
+    socket.emit('joinRoom', podaci);
+    setJoined(props.sagovornik.id);
+    setUserONLINE(false)
+    setOldRoom(joined);
+  }
 
-    return () => clearInterval(interval);
-  }, [props.sagovornik]);
+  if (!socket) {
+    const newSocket = io('http://localhost:3000');
+    setSocket(newSocket);
+  }
+  if (socket)
+    socket.on('leftRoom', (data) => {
+      if (data.userId != user.id) {
+        setUserONLINE(false);
+      }
+    })
+
+  if (socket)
+    socket.on('joinedRoom', (data) => {
+      if (data.data.userId !== user.id) {
+        setUserONLINE(true);
+      }
+      if (data.numUsers >= 1)
+        setUserONLINE(true)
+    })
+
+  if (socket) {
+    socket.on('newMessage', (message) => {
+      ucitajPoruke()
+    });
+  }
+  const posaljiPoruku = async () => {
+    let podaci = {
+      text: novaPoruka,
+      date: Date.now(),
+      senderId: user.id,
+      chatId: props.sagovornik.id,
+      room: props.sagovornik.id,
+    };
+    setNovaPoruka("");
+    socket.emit('chatMessage', podaci);//sagovornik.id je id chata
+  };
+
+  useEffect(() => {
+    skrol.current.scrollIntoView({ behavior: "auto" });
+  }, [messages]);
+
+
 
   return (
     <div
@@ -82,23 +127,27 @@ const SingleChat = (props) => {
         }}
       >
         {props.sagovornik.student.id === user.id ? (
-          <Avatar
-            src={props.sagovornik.tutor.imageUrl}
-            style={{ marginRight: "1rem" }}
-          ></Avatar>
-        ) : (
-          <Avatar
-            src={props.sagovornik.student.imageUrl}
-            style={{ marginRight: "1rem" }}
-          ></Avatar>
-        )}
-        <Typography variant="h4">
+          <Pulsating visible={userONLINE}>
+            <StyledDiv>
+              <Avatar
+                src={props.sagovornik.tutor.imageUrl}
+              ></Avatar>
+            </StyledDiv>
+          </Pulsating>) : (<Pulsating visible={userONLINE}>
+            <StyledDiv>
+              <Avatar
+                src={props.sagovornik.student.imageUrl}
+              ></Avatar>
+            </StyledDiv>
+          </Pulsating>)}
+        <Typography variant="h4" style={{ marginLeft: "1rem" }}>
           {props.sagovornik.student.id === user.id
             ? props.sagovornik.tutor.name + " " + props.sagovornik.tutor.surname
             : props.sagovornik.student.name +
-              " " +
-              props.sagovornik.student.surname}
+            " " +
+            props.sagovornik.student.surname}
         </Typography>
+        {/* {userONLINE ? (<CircleIcon style={{ color: "limegreen" }} />) : (<TripOriginOutlinedIcon style={{ color: "gray" }} />)} */}
       </div>
 
       <div style={{ height: "80%", overflowY: "scroll" }}>

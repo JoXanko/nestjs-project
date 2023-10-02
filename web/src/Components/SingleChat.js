@@ -104,11 +104,6 @@ const SingleChat = (props) => {
     skrol.current.scrollIntoView({ behavior: "auto" });
   }, [messages]);
 
-<<<<<<< HEAD
-=======
-      ucitajPoruke();
-    }, 200);
->>>>>>> 10060ce01a4d05536733e9d22ccfa449c9b7fc92
 
 
   return (

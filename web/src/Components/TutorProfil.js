@@ -280,11 +280,7 @@ const TutorProfil = (props) => {
                             <Box fontWeight="800" display="inline">
                               Kategotrija:{" "}
                             </Box>
-<<<<<<< HEAD
                             {izabrani&&open==true ? izabrani.category.name : ""}
-=======
-                            {category}
->>>>>>> 10060ce01a4d05536733e9d22ccfa449c9b7fc92
                           </Typography>
 
                           <Typography gutterBottom component="div">
@@ -298,12 +294,8 @@ const TutorProfil = (props) => {
                             <Box fontWeight="800" display="inline">
                               Lokacija:{" "}
                             </Box>
-<<<<<<< HEAD
                             {izabrani&&open==true ? izabrani.location.name : ""}
                             {console.log(izabrani)}
-=======
-                            {locationN}
->>>>>>> 10060ce01a4d05536733e9d22ccfa449c9b7fc92
                           </Typography>
 
                           {ocenjeno.grade !== undefined ? (
@@ -366,11 +358,7 @@ const TutorProfil = (props) => {
         margin={"auto"}
         padding={"auto"}
       >
-<<<<<<< HEAD
         <h4 style={{ color: "#FFFFFF" }}>Copyright: ITutor © 2023</h4>
-=======
-        <h4 style={{ color: "#FFFFFF" }}>Copyright : @JoXanko © 2022</h4>
->>>>>>> 10060ce01a4d05536733e9d22ccfa449c9b7fc92
       </Box>
     </Box>
   );
